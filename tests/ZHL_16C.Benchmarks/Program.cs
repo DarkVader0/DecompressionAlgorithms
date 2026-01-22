@@ -1,6 +1,6 @@
-﻿namespace ZHL_16C.Benchmarks;
+﻿using BenchmarkDotNet.Running;
+using ZHL_16C.Benchmarks;
 
-public class Program
-{
-    
-}
+ValidationTests.Run_40m_45min_Benchmark();
+
+BenchmarkRunner.Run<Zhl16CBenchmarks>();

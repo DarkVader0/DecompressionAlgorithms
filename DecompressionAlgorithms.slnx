@@ -1,1 +1,8 @@
-<Solution />
+<Solution>
+    <Folder Name="/src/">
+        <Project Path="src/ZHL-16C.Library/ZHL-16C.Library.csproj"/>
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/ZHL_16C.Benchmarks/ZHL_16C.Benchmarks.csproj"/>
+    </Folder>
+</Solution>
