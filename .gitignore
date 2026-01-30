@@ -3,3 +3,5 @@
 **/bin
 **/obj
 tests/**/*.Artifacts
+
+DecompressionAlgorithms.sln.DotSettings.user
