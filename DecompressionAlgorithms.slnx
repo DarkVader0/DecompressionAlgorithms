@@ -1,6 +1,8 @@
 <Solution>
     <Folder Name="/src/">
-        <Project Path="src/Buhlmann.Zhl16c/Buhlmann.Zhl16c.csproj" />
+        <Project Path="src/Buhlmann.Zhl16c/Buhlmann.Zhl16c.csproj"/>
     </Folder>
-    <Folder Name="/tests/" />
+    <Folder Name="/tests/">
+        <Project Path="tests/Buhlmann.Zhl16c.Tests.Unit/Buhlmann.Zhl16c.Tests.Unit.csproj"/>
+    </Folder>
 </Solution>

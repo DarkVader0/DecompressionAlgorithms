@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Buhlmann.Zhl16c.Constants;
 using Buhlmann.Zhl16c.Enums;
 
@@ -41,7 +40,7 @@ public struct DiveContext
     {
         return (uint)(mbar / SpecificWeight);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint MbarToDepthMm(uint mbar)
     {
@@ -77,7 +76,7 @@ public struct DiveContext
         {
             if (mix.N2Permille > 0)
             {
-                maxAmbientMbar = (uint)(pNarcoticMbar * GasConstants.N2InAirPermille / mix.N2Permille);
+                maxAmbientMbar = pNarcoticMbar * GasConstants.N2InAirPermille / mix.N2Permille;
             }
         }
 
@@ -111,15 +110,15 @@ public struct DiveContext
         var narcoticPermille = o2IsNarcotic
             ? (ushort)(mix.O2Permille + mix.N2Permille)
             : mix.N2Permille;
-        
+
         var ambientMbar = DepthToMbar(depthMm);
         var narcoticMbar = ambientMbar * narcoticPermille / 1000;
-        
-        var airNarcoticPermille = o2IsNarcotic ? (ushort)1000 : (ushort)GasConstants.N2InAirPermille;
+
+        var airNarcoticPermille = o2IsNarcotic ? (ushort)1000 : GasConstants.N2InAirPermille;
         var endAmibientMbar = narcoticMbar * 1000 / airNarcoticPermille;
-        
+
         return MbarToDepthMm(endAmibientMbar);
     }
-    
+
     public static DiveContext Default => new(GasConstants.StandardPressureMbar, WaterType.Salt);
 }

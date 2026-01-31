@@ -7,5 +7,5 @@ public enum SegmentType : byte
     Ascent,
     DecoStop,
     GasSwitch,
-    SafetyStop,
+    SafetyStop
 }

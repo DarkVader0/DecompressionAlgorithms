@@ -9,7 +9,8 @@ public static class Validation
 {
     private static PlanError ValidateGasMix(GasMix mix)
     {
-        if (mix.O2Permille < 50 || mix.O2Permille > 1000 || mix.HePermille > 1000 || mix.O2Permille + mix.HePermille > 1000)
+        if (mix.O2Permille < 50 || mix.O2Permille > 1000 || mix.HePermille > 1000 ||
+            mix.O2Permille + mix.HePermille > 1000)
         {
             return PlanError.InvalidInput;
         }
@@ -33,7 +34,7 @@ public static class Validation
 
         return PlanError.Ok;
     }
-    
+
     public static PlanError ValidateSettings(PlannerSettings settings)
     {
         var error = ValidateGradientFactors(settings.Deco.GFLow, settings.Deco.GFHigh);

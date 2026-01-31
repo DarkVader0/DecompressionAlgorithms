@@ -35,7 +35,7 @@ public static class GasConsumption
         uint rateMmMin)
     {
         var distanceMm = Math.Abs((int)endDepthMm - (int)startDepthMm);
-        
+
         return (uint)(distanceMm * 60.0 / rateMmMin);
     }
 
@@ -44,11 +44,6 @@ public static class GasConsumption
         uint gasUsedMl,
         uint cylinderVolumeMl)
     {
-        if (cylinderVolumeMl <= 0)
-        {
-            return 0;
-        }
-
         var totalGasMl = (long)startPressureMbar * cylinderVolumeMl / 1000;
         var remainingGasMl = totalGasMl - gasUsedMl;
 
@@ -56,7 +51,7 @@ public static class GasConsumption
         {
             return 0;
         }
-        
-        return (uint) (remainingGasMl * 1000 / cylinderVolumeMl);
+
+        return (uint)(remainingGasMl * 1000 / cylinderVolumeMl);
     }
 }

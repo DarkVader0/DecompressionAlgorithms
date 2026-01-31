@@ -9,36 +9,18 @@ namespace Buhlmann.Zhl16c.Coefficients;
 public unsafe struct BuhlmannCoefficients
 {
     public const int CompartmentCount = 16;
-
-    /// <summary>
-    /// Water vapor pressure (bar) - Bühlmann value with Rq = 1.0
-    /// </summary>
     public const double WaterVaporPressure = 0.0627;
-
-    /// <summary>
-    /// Water vapor pressure (bar) - Schreiner value with Rq = 0.8
-    /// </summary>
     public const double WaterVaporPressureSchreiner = 0.0493;
-
-    /// <summary>
-    /// ln(2) / 60 - used in half-life calculations
-    /// </summary>
     public const double Ln2Over60 = 1.155245301e-02;
-
     public fixed double N2HalfLife[16];
     public fixed double N2A[16];
     public fixed double N2B[16];
     public fixed double N2FactorOneSecond[16];
-
     public fixed double HeHalfLife[16];
     public fixed double HeA[16];
     public fixed double HeB[16];
     public fixed double HeFactorOneSecond[16];
 
-    /// <summary>
-    /// Return Buhlmann factor for a particular period and tissue index.
-    /// Same as Subsurface's factor() function.
-    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double Factor(int periodSeconds,
         int ci,
@@ -53,9 +35,6 @@ public unsafe struct BuhlmannCoefficients
         return 1.0 - Math.Exp(-periodSeconds * Ln2Over60 / halfLife);
     }
 
-    /// <summary>
-    /// ZHL-16C coefficients singleton.
-    /// </summary>
     public static readonly BuhlmannCoefficients ZHL16C = Create();
 
     private static BuhlmannCoefficients Create()
