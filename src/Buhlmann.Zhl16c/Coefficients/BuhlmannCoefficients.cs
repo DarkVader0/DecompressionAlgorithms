@@ -4,7 +4,6 @@ namespace Buhlmann.Zhl16c.Coefficients;
 
 /// <summary>
 /// Bühlmann ZHL-16C decompression model coefficients.
-/// Fixed-size struct for zero allocations, matching Subsurface's core/deco.cpp
 /// </summary>
 public unsafe struct BuhlmannCoefficients
 {
@@ -22,7 +21,7 @@ public unsafe struct BuhlmannCoefficients
     public fixed double HeFactorOneSecond[16];
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public double Factor(int periodSeconds,
+    public readonly double Factor(int periodSeconds,
         int ci,
         bool isHelium)
     {

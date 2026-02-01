@@ -8,7 +8,7 @@ public class GasMixTests
     public void N2Permille_ShouldBeRemainderToOneThousand()
     {
         // Arrange
-        var mix = new GasMix(o2Permille: 180, hePermille: 350);
+        var mix = new GasMix(180, 350);
 
         // Act
         var n2 = mix.N2Permille;

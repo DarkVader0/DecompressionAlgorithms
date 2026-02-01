@@ -72,7 +72,7 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var ean50 = new GasMix(o2Permille: 500, hePermille: 0);
+        var ean50 = new GasMix(500, 0);
         const uint depthMm = 21000;
 
         // Act
@@ -89,7 +89,7 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var air = new GasMix(o2Permille: 210, hePermille: 0);
+        var air = new GasMix(210, 0);
         const uint depthMm = 10000;
 
         // Act
@@ -106,7 +106,7 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var trimix = new GasMix(o2Permille: 180, hePermille: 450);
+        var trimix = new GasMix(180, 450);
         const uint depthMm = 30000;
 
         // Act
@@ -122,12 +122,12 @@ public class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        var ean32 = new GasMix(o2Permille: 320, hePermille: 0);
+        var ean32 = new GasMix(320, 0);
         const uint roundToMm = 1000;
 
         // Act
-        var mod14 = ctx.GasModMm(ean32, po2LimitMbar: 1400, roundToMm);
-        var mod16 = ctx.GasModMm(ean32, po2LimitMbar: 1600, roundToMm);
+        var mod14 = ctx.GasModMm(ean32, 1400, roundToMm);
+        var mod16 = ctx.GasModMm(ean32, 1600, roundToMm);
 
         // Assert
         Assert.True(mod16 >= mod14);
@@ -140,11 +140,11 @@ public class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        var o2 = new GasMix(o2Permille: 1000, hePermille: 0);
+        var o2 = new GasMix(1000, 0);
         const uint roundToMm = 1000;
 
         // Act
-        var mod = ctx.GasModMm(o2, po2LimitMbar: 1000, roundToMm);
+        var mod = ctx.GasModMm(o2, 1000, roundToMm);
 
         // Assert
         Assert.InRange(mod, 0u, 1000u);
@@ -155,11 +155,11 @@ public class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        var air = new GasMix(o2Permille: 210, hePermille: 0);
+        var air = new GasMix(210, 0);
         const uint depthMm = 30000;
 
         // Act
-        var endMm = ctx.EndMm(air, depthMm, o2IsNarcotic: false);
+        var endMm = ctx.EndMm(air, depthMm, false);
 
         // Assert
         Assert.InRange(endMm, depthMm, (long)depthMm + 450);
@@ -172,12 +172,12 @@ public class DiveContextTests
         var ctx = DiveContext.Default;
         const uint depthMm = 60000;
 
-        var tx2135 = new GasMix(o2Permille: 210, hePermille: 350);
-        var tx2150 = new GasMix(o2Permille: 210, hePermille: 500);
+        var tx2135 = new GasMix(210, 350);
+        var tx2150 = new GasMix(210, 500);
 
         // Act
-        var end35 = ctx.EndMm(tx2135, depthMm, o2IsNarcotic: false);
-        var end50 = ctx.EndMm(tx2150, depthMm, o2IsNarcotic: false);
+        var end35 = ctx.EndMm(tx2135, depthMm, false);
+        var end50 = ctx.EndMm(tx2150, depthMm, false);
 
         // Assert
         Assert.True(end50 < end35);
@@ -201,13 +201,13 @@ public class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        var air = new GasMix(o2Permille: 209, hePermille: 0);
+        var air = new GasMix(209, 0);
 
         const uint endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
-        var mndMm = ctx.GasMndMm(air, endMm, o2IsNarcotic: false, roundToMm);
+        var mndMm = ctx.GasMndMm(air, endMm, false, roundToMm);
 
         // Assert
         Assert.InRange((long)mndMm, 29000, 31000);
@@ -220,15 +220,15 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var tx2135 = new GasMix(o2Permille: 209, hePermille: 350);
-        var tx2150 = new GasMix(o2Permille: 209, hePermille: 500);
+        var tx2135 = new GasMix(209, 350);
+        var tx2150 = new GasMix(209, 500);
 
         const uint endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
-        var mnd35 = ctx.GasMndMm(tx2135, endMm, o2IsNarcotic: false, roundToMm);
-        var mnd50 = ctx.GasMndMm(tx2150, endMm, o2IsNarcotic: false, roundToMm);
+        var mnd35 = ctx.GasMndMm(tx2135, endMm, false, roundToMm);
+        var mnd50 = ctx.GasMndMm(tx2150, endMm, false, roundToMm);
 
         // Assert
         Assert.True(mnd50 > mnd35);
@@ -242,15 +242,15 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var tx1835 = new GasMix(o2Permille: 180, hePermille: 350);
-        var tx1880 = new GasMix(o2Permille: 180, hePermille: 800);
+        var tx1835 = new GasMix(180, 350);
+        var tx1880 = new GasMix(180, 800);
 
         const uint endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
-        var mnd35 = ctx.GasMndMm(tx1835, endMm, o2IsNarcotic: true, roundToMm);
-        var mnd80 = ctx.GasMndMm(tx1880, endMm, o2IsNarcotic: true, roundToMm);
+        var mnd35 = ctx.GasMndMm(tx1835, endMm, true, roundToMm);
+        var mnd80 = ctx.GasMndMm(tx1880, endMm, true, roundToMm);
 
         // Assert
         Assert.Equal(mnd35, mnd80);
@@ -261,13 +261,13 @@ public class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        var ean32 = new GasMix(o2Permille: 320, hePermille: 0);
+        var ean32 = new GasMix(320, 0);
 
         const uint endMm = 27000;
         const int roundToMm = 3000;
 
         // Act
-        var mnd = ctx.GasMndMm(ean32, endMm, o2IsNarcotic: false, roundToMm);
+        var mnd = ctx.GasMndMm(ean32, endMm, false, roundToMm);
 
         // Assert
         Assert.Equal(0u, mnd % roundToMm);
@@ -279,13 +279,13 @@ public class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var heliox = new GasMix(o2Permille: 200, hePermille: 800);
+        var heliox = new GasMix(200, 800);
 
         const uint endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
-        var mnd = ctx.GasMndMm(heliox, endMm, o2IsNarcotic: false, roundToMm);
+        var mnd = ctx.GasMndMm(heliox, endMm, false, roundToMm);
 
         // Assert
         Assert.True(mnd > 1000000);

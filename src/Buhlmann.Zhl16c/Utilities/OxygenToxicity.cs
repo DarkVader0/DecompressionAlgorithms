@@ -22,7 +22,7 @@ public static class OxygenToxicity
     {
         return CnsRatePerSecond(po2Mbar) * durationSec * 100.0;
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double CalculateCnsTransition(uint startPo2Mbar,
         uint endPo2Mbar,
@@ -45,7 +45,7 @@ public static class OxygenToxicity
 
         return durationMin * Math.Pow((po2Bar - 0.5) / 0.5, 0.83);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double CalculateOtuTransition(uint startPo2Mbar,
         uint endPo2Mbar,

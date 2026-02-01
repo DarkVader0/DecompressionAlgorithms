@@ -1,5 +1,4 @@
 ﻿using Buhlmann.Zhl16c.Enums;
-using Buhlmann.Zhl16c.Helpers;
 using Buhlmann.Zhl16c.Input;
 using Buhlmann.Zhl16c.Settings;
 using Buhlmann.Zhl16c.Utilities;
@@ -84,10 +83,10 @@ public class ValidationTests
         var settings = new PlannerSettings();
         settings.Deco.GFLow = 90;
         settings.Deco.GFHigh = 80;
-        
+
         // Act
         var result = Validation.ValidateSettings(settings);
-        
+
         // Assert
         Assert.Equal(PlanError.InvalidInput, result);
     }

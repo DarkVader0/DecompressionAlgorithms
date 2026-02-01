@@ -45,11 +45,13 @@ public struct DiveContext
     public uint MbarToDepthMm(uint mbar)
     {
         if (mbar <= SurfacePressureMbar)
+        {
             return 0;
-        
+        }
+
         return RelMbarToDepthMm(mbar - SurfacePressureMbar);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint GasModMm(GasMix mix,
         uint po2LimitMbar,

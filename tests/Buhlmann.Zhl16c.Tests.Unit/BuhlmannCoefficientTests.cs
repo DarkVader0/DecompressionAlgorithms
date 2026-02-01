@@ -4,7 +4,7 @@ namespace Buhlmann.Zhl16c.Tests.Unit;
 
 public class BuhlmannCoefficientTests
 {
-     [Fact]
+    [Fact]
     public unsafe void Zhl16C_ShouldLoadAllTissues_WithExpectedSentinelValues()
     {
         // Arrange
@@ -54,8 +54,8 @@ public class BuhlmannCoefficientTests
         const int ci = 0;
 
         // Act
-        var n2 = c.Factor(periodSeconds: 1, ci: ci, isHelium: false);
-        var he = c.Factor(periodSeconds: 1, ci: ci, isHelium: true);
+        var n2 = c.Factor(1, ci, false);
+        var he = c.Factor(1, ci, true);
 
         // Assert
         Assert.Equal(c.N2FactorOneSecond[ci], n2, 18.0);
@@ -71,8 +71,8 @@ public class BuhlmannCoefficientTests
         const int periodSec = 60; // 1 minute
 
         // Act
-        var n2 = c.Factor(periodSeconds: periodSec, ci: ci, isHelium: false);
-        var he = c.Factor(periodSeconds: periodSec, ci: ci, isHelium: true);
+        var n2 = c.Factor(periodSec, ci, false);
+        var he = c.Factor(periodSec, ci, true);
 
         // Assert
         // Expected = 1 - exp(-periodSeconds * Ln2Over60 / halfLife)
@@ -84,16 +84,16 @@ public class BuhlmannCoefficientTests
     }
 
     [Fact]
-    public unsafe void Factor_ShouldIncrease_WhenPeriodIncreases_ForSameTissueAndGas()
+    public void Factor_ShouldIncrease_WhenPeriodIncreases_ForSameTissueAndGas()
     {
         // Arrange
         var c = BuhlmannCoefficients.ZHL16C;
         const int ci = 5;
 
         // Act
-        var f10 = c.Factor(periodSeconds: 10, ci: ci, isHelium: false);
-        var f60 = c.Factor(periodSeconds: 60, ci: ci, isHelium: false);
-        var f300 = c.Factor(periodSeconds: 300, ci: ci, isHelium: false);
+        var f10 = c.Factor(10, ci, false);
+        var f60 = c.Factor(60, ci, false);
+        var f300 = c.Factor(300, ci, false);
 
         // Assert
         Assert.True(f10 > 0);
@@ -103,19 +103,19 @@ public class BuhlmannCoefficientTests
     }
 
     [Fact]
-    public unsafe void Factor_ShouldBeHigher_ForFasterTissue_ForSamePeriod()
+    public void Factor_ShouldBeHigher_ForFasterTissue_ForSamePeriod()
     {
         // Arrange
         var c = BuhlmannCoefficients.ZHL16C;
         const int periodSec = 60;
 
         // Fast tissue vs slow tissue
-        const int fast = 0;   // 5 min N2 half-life
-        const int slow = 15;  // 635 min N2 half-life
+        const int fast = 0; // 5 min N2 half-life
+        const int slow = 15; // 635 min N2 half-life
 
         // Act
-        var fastFactor = c.Factor(periodSeconds: periodSec, ci: fast, isHelium: false);
-        var slowFactor = c.Factor(periodSeconds: periodSec, ci: slow, isHelium: false);
+        var fastFactor = c.Factor(periodSec, fast, false);
+        var slowFactor = c.Factor(periodSec, slow, false);
 
         // Assert
         Assert.True(fastFactor > slowFactor);

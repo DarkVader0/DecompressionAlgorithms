@@ -74,8 +74,8 @@ public sealed class OxygenToxicityTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var ean25 = new GasMix(o2Permille: 250, hePermille: 0);
-        var ean50 = new GasMix(o2Permille: 500, hePermille: 0);
+        var ean25 = new GasMix(250, 0);
+        var ean50 = new GasMix(500, 0);
 
         // Depths (mm)
         const uint d0 = 0u;
@@ -150,7 +150,7 @@ public sealed class OxygenToxicityTests
         // Assert
         Assert.InRange(result, 95, 97);
     }
-    
+
     [Fact]
     public void CalculateOtu_ShouldReturnZero_WhenPo2Is500OrLess()
     {
@@ -165,12 +165,12 @@ public sealed class OxygenToxicityTests
         // Arrange
         var ctx = DiveContext.Default;
 
-        var ean25 = new GasMix(o2Permille: 250, hePermille: 0);
-        var ean50 = new GasMix(o2Permille: 500, hePermille: 0);
+        var ean25 = new GasMix(250, 0);
+        var ean50 = new GasMix(500, 0);
 
-        const uint d0  = 0u;
-        const uint d6  = 6000u;
-        const uint d9  = 9000u;
+        const uint d0 = 0u;
+        const uint d6 = 6000u;
+        const uint d9 = 9000u;
         const uint d12 = 12000u;
         const uint d15 = 15000u;
         const uint d21 = 21000u;
@@ -189,12 +189,12 @@ public sealed class OxygenToxicityTests
 
         var t10 = 10u * 60u;
         var t30 = 30u * 60u;
-        var t6  = 6u  * 60u;
-        var t3  = 3u  * 60u;
-        var t1  = 1u  * 60u;
-        var t2  = 2u  * 60u;
-        var t4  = 4u  * 60u;
-        var t7  = 7u  * 60u;
+        var t6 = 6u * 60u;
+        var t3 = 3u * 60u;
+        var t1 = 1u * 60u;
+        var t2 = 2u * 60u;
+        var t4 = 4u * 60u;
+        var t7 = 7u * 60u;
         var t39 = 39u * 60u;
 
         // Act
