@@ -25,5 +25,5 @@ public readonly struct GasMix
     public bool IsTrimix => HePermille > 0;
 
     public static GasMix Air => new(210, 0);
-    public static GasMix Oxygen => new(100, 0);
+    public static GasMix Oxygen => new(1000, 0);
 }

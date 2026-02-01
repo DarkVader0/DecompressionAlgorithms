@@ -44,10 +44,12 @@ public struct DiveContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint MbarToDepthMm(uint mbar)
     {
+        if (mbar <= SurfacePressureMbar)
+            return 0;
+        
         return RelMbarToDepthMm(mbar - SurfacePressureMbar);
     }
-
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint GasModMm(GasMix mix,
         uint po2LimitMbar,
@@ -63,7 +65,7 @@ public struct DiveContext
     public uint GasMndMm(GasMix mix,
         uint endMm,
         bool o2IsNarcotic,
-        int roundToMm)
+        uint roundToMm)
     {
         var pNarcoticMbar = DepthToMbar(endMm);
 
@@ -81,7 +83,7 @@ public struct DiveContext
         }
 
         var depthMm = (double)MbarToDepthMm(maxAmbientMbar);
-        return (uint)(depthMm / roundToMm * roundToMm);
+        return (uint)(depthMm / roundToMm) * roundToMm;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
