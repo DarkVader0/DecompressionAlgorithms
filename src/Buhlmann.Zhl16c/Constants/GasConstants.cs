@@ -9,4 +9,6 @@ public static class GasConstants
     public static ushort SaltWaterSalinity => 10300;
     public static ushort En13319Salinity => 10200;
     public static ushort StandardPressureMbar => 1013;
+    public static ushort BackGasBreakO2DurationSeconds => 12 * 60;
+    public static ushort BackGasBreakDurationSeconds => 6 * 60;
 }

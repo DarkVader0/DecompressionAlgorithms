@@ -175,7 +175,8 @@ public static class GasSelector
         {
             ref readonly var cyl = ref cylinders[i];
 
-            if (cyl.Use is CylinderUse.Diluent or CylinderUse.Oxygen)
+            if ((cyl.Use == CylinderUse.Diluent && cyl.Use != CylinderUse.Bailout) ||
+                cyl.Use == CylinderUse.Oxygen)
             {
                 continue;
             }
@@ -200,6 +201,18 @@ public static class GasSelector
         }
 
         return bestIndex;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool CheckIcd(GasMix oldMix,
+        GasMix newMix,
+        out int dN2,
+        out int dHe)
+    {
+        dN2 = newMix.N2Permille - oldMix.N2Permille;
+        dHe = newMix.HePermille - oldMix.HePermille;
+
+        return oldMix.HePermille > 0 && dN2 > 0 && dHe < 0 && 5 * dN2 > -dHe;
     }
 
     public readonly struct GasChange

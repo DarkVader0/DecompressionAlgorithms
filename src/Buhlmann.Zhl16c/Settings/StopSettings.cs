@@ -11,4 +11,6 @@ public struct StopSettings
     public byte ProblemSolvingTimeMin;
     public bool DoO2Breaks;
     public bool SwitchAtRequiredStop;
+    public ushort O2BreakDurationSec;
+    public ushort BackgasBreakDurationSec;
 }
