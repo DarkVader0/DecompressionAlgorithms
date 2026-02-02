@@ -568,7 +568,7 @@ public class GasSelectorTests
         var newMix = new GasMix(210, 350);
 
         // Act
-        var warning = GasSelector.CheckIcd(oldMix, newMix, out var dN2, out var dHe);
+        var warning = GasSelector.CheckIcd(oldMix, newMix, out _, out _);
 
         // Assert
         Assert.True(warning);
