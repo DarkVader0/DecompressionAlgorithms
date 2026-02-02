@@ -9,7 +9,6 @@ public unsafe struct BuhlmannCoefficients
 {
     public const int CompartmentCount = 16;
     public const double WaterVaporPressure = 0.0627;
-    public const double WaterVaporPressureSchreiner = 0.0493;
     public const double Ln2Over60 = 1.155245301e-02;
     public fixed double N2HalfLife[16];
     public fixed double N2A[16];

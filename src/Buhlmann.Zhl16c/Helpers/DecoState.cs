@@ -5,39 +5,15 @@ using Buhlmann.Zhl16c.Enums;
 
 namespace Buhlmann.Zhl16c.Helpers;
 
-/// <summary>
-/// Tracks decompression state for all 16 tissue compartments.
-/// This is the heart of ZHL-16C calculations.
-/// </summary>
 public unsafe struct DecoState
 {
-    /// <summary>
-    /// N2 tissue saturation for each compartment (bar).
-    /// </summary>
     public fixed double TissueN2Sat[16];
-
-    /// <summary>
-    /// He tissue saturation for each compartment (bar).
-    /// </summary>
     public fixed double TissueHeSat[16];
-
-    /// <summary>
-    /// Ceiling pressure at GF Low for this dive (bar).
-    /// </summary>
     public double GfLowPressureThisDive;
-
-    /// <summary>
-    /// Index of the leading (controlling) tissue compartment.
-    /// </summary>
     public int LeadingTissueIndex;
 
-    /// <summary>
-    /// Initialize tissues to surface saturation.
-    /// </summary>
-    /// <param name="surfacePressureBar">Surface pressure in bar</param>
     public void Clear(double surfacePressureBar)
     {
-        // Ambient N2 pressure = (surface - water vapor) * N2 fraction
         var ambientN2 = (surfacePressureBar - BuhlmannCoefficients.WaterVaporPressure)
             * GasConstants.N2InAirPermille / 1000.0;
 
@@ -51,15 +27,6 @@ public unsafe struct DecoState
         LeadingTissueIndex = 0;
     }
 
-    /// <summary>
-    /// Add a segment at constant depth to the deco calculation.
-    /// Updates tissue loading using Schreiner equation.
-    /// </summary>
-    /// <param name="pressureBar">Ambient pressure in bar</param>
-    /// <param name="gasMix">Gas mix being breathed</param>
-    /// <param name="periodSeconds">Duration in seconds</param>
-    /// <param name="diveMode">Dive mode (OC, CCR, etc.)</param>
-    /// <param name="setpointMbar">CCR setpoint in mbar (0 for OC)</param>
     public void AddSegment(
         double pressureBar,
         GasMix gasMix,
@@ -109,11 +76,6 @@ public unsafe struct DecoState
         }
     }
 
-    /// <summary>
-    /// Calculate the ceiling (minimum tolerated ambient pressure) for given GF.
-    /// </summary>
-    /// <param name="gf">Gradient factor (0.0 - 1.0)</param>
-    /// <returns>Ceiling pressure in bar</returns>
     public double CeilingBar(double gf)
     {
         ref readonly var coeff = ref BuhlmannCoefficients.ZHL16C;
@@ -152,13 +114,6 @@ public unsafe struct DecoState
         return maxCeiling;
     }
 
-    /// <summary>
-    /// Calculate the ceiling in mm for given GF and dive context.
-    /// Returns 0 if surface is allowed.
-    /// </summary>
-    /// <param name="gf">Gradient factor (0.0 - 1.0)</param>
-    /// <param name="context">Dive context for pressure/depth conversion</param>
-    /// <returns>Ceiling depth in mm, or 0 if clear to surface</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint CeilingMm(double gf, DiveContext context)
     {
@@ -173,18 +128,12 @@ public unsafe struct DecoState
         return context.MbarToDepthMm(ceilingMbar);
     }
 
-    /// <summary>
-    /// Get total inert gas pressure for a compartment.
-    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double GetInertPressure(int compartmentIndex)
     {
         return TissueN2Sat[compartmentIndex] + TissueHeSat[compartmentIndex];
     }
 
-    /// <summary>
-    /// Create a copy of the current state for trial calculations.
-    /// </summary>
     public DecoState Clone()
     {
         var copy = new DecoState();
@@ -201,9 +150,6 @@ public unsafe struct DecoState
         return copy;
     }
 
-    /// <summary>
-    /// Copy state from another DecoState (for restoring after trial).
-    /// </summary>
     public void CopyFrom(ref DecoState other)
     {
         for (var i = 0; i < BuhlmannCoefficients.CompartmentCount; i++)
@@ -216,9 +162,6 @@ public unsafe struct DecoState
         LeadingTissueIndex = other.LeadingTissueIndex;
     }
 
-    /// <summary>
-    /// Create a new DecoState initialized for surface at given pressure.
-    /// </summary>
     public static DecoState CreateAtSurface(double surfacePressureBar)
     {
         var state = new DecoState();
@@ -226,9 +169,6 @@ public unsafe struct DecoState
         return state;
     }
 
-    /// <summary>
-    /// Create a new DecoState initialized for surface at standard pressure.
-    /// </summary>
     public static DecoState CreateAtSurface()
     {
         return CreateAtSurface(GasConstants.StandardPressureMbar / 1000.0);

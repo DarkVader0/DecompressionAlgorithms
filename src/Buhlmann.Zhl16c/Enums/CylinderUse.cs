@@ -7,5 +7,6 @@ public enum CylinderUse : byte
     Bottom = 1,
     Deco = 2,
     Diluent = 4,
-    Bailout = 8
+    Bailout = 8,
+    Oxygen = 16
 }
