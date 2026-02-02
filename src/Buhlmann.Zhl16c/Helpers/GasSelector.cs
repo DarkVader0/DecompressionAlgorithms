@@ -82,7 +82,9 @@ public static class GasSelector
         {
             ref readonly var cyl = ref cylinders[i];
 
-            if (cyl.Use != CylinderUse.Deco && cyl.Use != CylinderUse.Bottom)
+            if (cyl.Use != CylinderUse.Deco 
+                && cyl.Use != CylinderUse.Bottom 
+                && cyl.Use != CylinderUse.Bailout)
             {
                 continue;
             }
