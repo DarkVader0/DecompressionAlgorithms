@@ -2,6 +2,8 @@
 
 public static class DecoStopLevels
 {
+    public const uint StepMm = 3000;
+
     public static readonly uint[] Mm =
     {
         0, 3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000,
@@ -11,8 +13,6 @@ public static class DecoStopLevels
         180000, 190000, 200000, 220000, 240000, 260000, 280000, 300000,
         320000, 340000, 360000, 380000
     };
-
-    public const uint StepMm = 3000;
 
     public static uint GetNextStopLevel(uint currentDepthMm)
     {

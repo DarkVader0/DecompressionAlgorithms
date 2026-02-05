@@ -118,6 +118,36 @@ public class DiveContextTests
     }
 
     [Fact]
+    public void GasModMmSimple_ShouldReturn60m_WhenTx2021()
+    {
+        // Arrange
+        var ctx = DiveContext.Default;
+        var mix = new GasMix(200, 210);
+        const uint roundToMm = 1000;
+
+        // Act
+        var mod14 = ctx.GasModMmSimple(mix, 1400, roundToMm);
+
+        // Assert
+        Assert.Equal(60000u, mod14);
+    }
+
+    [Fact]
+    public void GasModMmSimple_ShouldReturn21m_WhenNx50()
+    {
+        // Arrange
+        var ctx = DiveContext.Default;
+        var mix = new GasMix(500, 0);
+        const uint roundToMm = 1000;
+
+        // Act
+        var mod14 = ctx.GasModMmSimple(mix, 1600, roundToMm);
+
+        // Assert
+        Assert.Equal(21000u, mod14);
+    }
+
+    [Fact]
     public void GasModMm_ShouldIncrease_WhenPo2LimitIncreases()
     {
         // Arrange

@@ -64,6 +64,24 @@ public struct DiveContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint GasModMmSimple(GasMix mix,
+        uint po2LimitMbar,
+        uint roundToMm)
+    {
+        var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
+        var depthMm = (double)(maxPressureMbar - SurfacePressureMbar) * 10;
+
+        var steps = depthMm / roundToMm;
+
+        var roundedSteps =
+            po2LimitMbar <= 1400
+                ? Math.Round(steps, MidpointRounding.AwayFromZero)
+                : Math.Floor(steps);
+
+        return (uint)(roundedSteps * roundToMm);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint GasMndMm(GasMix mix,
         uint endMm,
         bool o2IsNarcotic,

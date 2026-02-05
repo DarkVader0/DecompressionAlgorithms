@@ -70,7 +70,7 @@ public class GasSelectorTests
         [
             new() { O2Permille = 1000, HePermille = 0, Use = CylinderUse.Deco },
             new() { O2Permille = 210, HePermille = 350, Use = CylinderUse.Bottom },
-            new() { O2Permille = 500, HePermille = 0, Use = CylinderUse.Deco },
+            new() { O2Permille = 500, HePermille = 0, Use = CylinderUse.Deco }
         ];
         Span<GasSelector.GasChange> gasChanges = stackalloc GasSelector.GasChange[10];
 
@@ -453,7 +453,7 @@ public class GasSelectorTests
         // Assert
         Assert.Equal(-1, result);
     }
-    
+
     [Fact]
     public void CompareGasDepth_SameO2_HigherHeIsDeeperSwitch()
     {
@@ -506,7 +506,7 @@ public class GasSelectorTests
         Assert.Equal(1, index);
     }
 
-    
+
     [Fact]
     public void FindBailoutGas_ShouldExcludeDiluentAndO2()
     {
