@@ -118,6 +118,48 @@ public unsafe struct DecoState
     public uint CeilingMm(double gf, DiveContext context)
     {
         var ceilingBar = CeilingBar(gf);
+
+        if (ceilingBar > GfLowPressureThisDive)
+        {
+            GfLowPressureThisDive = ceilingBar;
+        }
+
+        var ceilingMbar = (uint)(ceilingBar * 1000);
+
+        if (ceilingMbar <= context.SurfacePressureMbar)
+        {
+            return 0;
+        }
+
+        return context.MbarToDepthMm(ceilingMbar);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint CeilingMm(double gfLow,
+        double gfHigh,
+        DiveContext context)
+    {
+        var ceilingBarAtGfLow = CeilingBar(gfLow);
+
+        if (ceilingBarAtGfLow > GfLowPressureThisDive)
+        {
+            GfLowPressureThisDive = ceilingBarAtGfLow;
+        }
+
+        var surfacePressureBar = context.SurfacePressureMbar / 1000.0;
+
+        double interpolatedGf;
+        if (GfLowPressureThisDive <= surfacePressureBar)
+        {
+            interpolatedGf = gfHigh;
+        }
+        else
+        {
+            var ratio = (ceilingBarAtGfLow - surfacePressureBar) / (GfLowPressureThisDive - surfacePressureBar);
+            interpolatedGf = gfHigh + (gfLow - gfHigh) * ratio;
+        }
+
+        var ceilingBar = CeilingBar(interpolatedGf);
         var ceilingMbar = (uint)(ceilingBar * 1000);
 
         if (ceilingMbar <= context.SurfacePressureMbar)

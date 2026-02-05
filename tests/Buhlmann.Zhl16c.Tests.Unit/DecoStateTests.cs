@@ -9,11 +9,12 @@ public class DecoStateTests
 {
     private const double StandardPressureBar = 1.01325;
     private const double Tolerance = 0.0001;
+    private static DiveContext DefaultContext => DiveContext.Default;
 
     #region Clear Tests
 
     [Fact]
-    public unsafe void Clear_Should_InitializeTissuesWithN2_WhenCalledWithSurfacePressure()
+    public unsafe void Clear_ShouldInitializeTissuesWithN2_WhenCalledWithSurfacePressure()
     {
         // Arrange
         var state = new DecoState();
@@ -32,7 +33,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void Clear_Should_ZeroHeliumTissues_WhenCalledWithSurfacePressure()
+    public unsafe void Clear_ShouldZeroHeliumTissues_WhenCalledWithSurfacePressure()
     {
         // Arrange
         var state = new DecoState();
@@ -48,7 +49,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Clear_Should_SetGfLowPressure_WhenCalled()
+    public void Clear_ShouldSetGfLowPressure_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -62,7 +63,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Clear_Should_ResetLeadingTissueIndex_WhenCalled()
+    public void Clear_ShouldResetLeadingTissueIndex_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -79,7 +80,7 @@ public class DecoStateTests
     [InlineData(0.8)] // High altitude
     [InlineData(1.01325)] // Sea level
     [InlineData(1.1)] // Below sea level
-    public unsafe void Clear_Should_HandleVariousPressures_WhenCalledWithDifferentSurfacePressures(double pressure)
+    public unsafe void Clear_ShouldHandleVariousPressures_WhenCalledWithDifferentSurfacePressures(double pressure)
     {
         // Arrange
         var state = new DecoState();
@@ -97,7 +98,7 @@ public class DecoStateTests
     #region AddSegment Tests
 
     [Fact]
-    public unsafe void AddSegment_Should_IncreaseN2Saturation_WhenBreathingAirAtDepth()
+    public unsafe void AddSegment_ShouldIncreaseN2Saturation_WhenBreathingAirAtDepth()
     {
         // Arrange
         var state = new DecoState();
@@ -114,7 +115,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_IncreaseHeSaturation_WhenBreathingTrimix()
+    public unsafe void AddSegment_ShouldIncreaseHeSaturation_WhenBreathingTrimix()
     {
         // Arrange
         var state = new DecoState();
@@ -130,7 +131,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_DecreaseN2Saturation_WhenAscendingFromDepth()
+    public unsafe void AddSegment_ShouldDecreaseN2Saturation_WhenAscendingFromDepth()
     {
         // Arrange
         var state = new DecoState();
@@ -149,7 +150,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_HandleCCRMode_WhenSetpointProvided()
+    public unsafe void AddSegment_ShouldHandleCCRMode_WhenSetpointProvided()
     {
         // Arrange
         var state = new DecoState();
@@ -166,7 +167,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_CapO2AtAmbientPressure_WhenCCRSetpointTooHigh()
+    public unsafe void AddSegment_ShouldCapO2AtAmbientPressure_WhenCCRSetpointTooHigh()
     {
         // Arrange
         var state = new DecoState();
@@ -183,7 +184,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_HandlePureOxygen_WhenO2Is1000Permille()
+    public unsafe void AddSegment_ShouldHandlePureOxygen_WhenO2Is1000Permille()
     {
         // Arrange
         var state = new DecoState();
@@ -200,7 +201,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_UpdateFasterCompartmentsMore_WhenShortDuration()
+    public unsafe void AddSegment_ShouldUpdateFasterCompartmentsMore_WhenShortDuration()
     {
         // Arrange
         var state = new DecoState();
@@ -222,7 +223,7 @@ public class DecoStateTests
     [InlineData(DiveMode.OC)]
     [InlineData(DiveMode.CCR)]
     [InlineData(DiveMode.PSCR)]
-    public unsafe void AddSegment_Should_HandleDifferentDiveModes_WhenCalled(DiveMode mode)
+    public unsafe void AddSegment_ShouldHandleDifferentDiveModes_WhenCalled(DiveMode mode)
     {
         // Arrange
         var state = new DecoState();
@@ -242,7 +243,7 @@ public class DecoStateTests
     #region CeilingBar Tests
 
     [Fact]
-    public void CeilingBar_Should_ReturnZeroOrLess_WhenAtSurface()
+    public void CeilingBar_ShouldReturnZeroOrLess_WhenAtSurface()
     {
         // Arrange
         var state = new DecoState();
@@ -257,7 +258,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_ReturnHigherCeiling_WhenAfterDeepDive()
+    public void CeilingBar_ShouldReturnHigherCeiling_WhenAfterDeepDive()
     {
         // Arrange
         var state = new DecoState();
@@ -276,7 +277,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_ReturnLowerCeiling_WhenHigherGradientFactor()
+    public void CeilingBar_ShouldReturnLowerCeiling_WhenHigherGradientFactor()
     {
         // Arrange
         var state = new DecoState();
@@ -293,7 +294,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_SetLeadingTissueIndex_WhenCalled()
+    public void CeilingBar_ShouldSetLeadingTissueIndex_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -309,7 +310,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_HandleMixedGasLoading_WhenBothN2AndHePresent()
+    public void CeilingBar_ShouldHandleMixedGasLoading_WhenBothN2AndHePresent()
     {
         // Arrange
         var state = new DecoState();
@@ -330,7 +331,7 @@ public class DecoStateTests
     [InlineData(0.7)]
     [InlineData(0.9)]
     [InlineData(1.0)]
-    public void CeilingBar_Should_ReturnValidCeiling_WhenCalledWithVariousGradientFactors(double gf)
+    public void CeilingBar_ShouldReturnValidCeiling_WhenCalledWithVariousGradientFactors(double gf)
     {
         // Arrange
         var state = new DecoState();
@@ -346,7 +347,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_UseWeightedCoefficients_WhenMultipleInertGasesPresent()
+    public void CeilingBar_ShouldUseWeightedCoefficients_WhenMultipleInertGasesPresent()
     {
         // Arrange
         var state = new DecoState();
@@ -369,7 +370,7 @@ public class DecoStateTests
     #region CeilingMm Tests
 
     [Fact]
-    public void CeilingMm_Should_ReturnZero_WhenCeilingBelowSurface()
+    public void CeilingMm_ShouldReturnZero_WhenCeilingBelowSurface()
     {
         // Arrange
         var state = new DecoState();
@@ -384,7 +385,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingMm_Should_ReturnDepthInMm_WhenCeilingAboveSurface()
+    public void CeilingMm_ShouldReturnDepthInMm_WhenCeilingAboveSurface()
     {
         // Arrange
         var state = new DecoState();
@@ -402,7 +403,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingMm_Should_UseContextConversion_WhenCalculatingDepth()
+    public void CeilingMm_ShouldUseContextConversion_WhenCalculatingDepth()
     {
         // Arrange
         var state = new DecoState();
@@ -421,10 +422,250 @@ public class DecoStateTests
 
     #endregion
 
+    #region CeilingMm with GF Low/High Tests
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldReturnZero_WhenNoDecoObligation()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+
+        // Act
+        var ceilingMm = state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(0u, ceilingMm);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldReturnCeiling_WhenDecoRequired()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+        state.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
+
+        // Act
+        var ceilingMm = state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert
+        Assert.True(ceilingMm > 0);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldUpdateGfLowPressureThisDive_WhenCeilingIsDeeper()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+        state.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
+
+        var initialGfLowPressure = state.GfLowPressureThisDive;
+
+        // Act
+        state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert
+        Assert.True(state.GfLowPressureThisDive > initialGfLowPressure);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldNotDecreaseGfLowPressureThisDive_WhenCeilingIsShallower()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+        state.AddSegment(7.0, gasMix, 1800, DiveMode.OC, 0);
+        state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        var deepGfLowPressure = state.GfLowPressureThisDive;
+        state.AddSegment(2.0, gasMix, 3600, DiveMode.OC, 0);
+
+        // Act
+        state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(deepGfLowPressure, state.GfLowPressureThisDive);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldReturnDeeperCeiling_WhenGfLowIsLower()
+    {
+        // Arrange
+        var state1 = new DecoState();
+        var state2 = new DecoState();
+        state1.Clear(StandardPressureBar);
+        state2.Clear(StandardPressureBar);
+
+        var gasMix = new GasMix(210, 0);
+        state1.AddSegment(5.0, gasMix, 1500, DiveMode.OC, 0);
+        state2.AddSegment(5.0, gasMix, 1500, DiveMode.OC, 0);
+
+        // Act
+        var ceilingConservative = state1.CeilingMm(0.20, 0.70, DefaultContext);
+        var ceilingAggressive = state2.CeilingMm(0.50, 0.70, DefaultContext);
+
+        // Assert
+        Assert.True(ceilingConservative >= ceilingAggressive);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldReturnDeeperCeiling_WhenGfHighIsLower()
+    {
+        // Arrange
+        var state1 = new DecoState();
+        var state2 = new DecoState();
+        state1.Clear(StandardPressureBar);
+        state2.Clear(StandardPressureBar);
+
+        var gasMix = new GasMix(210, 0);
+        state1.AddSegment(5.0, gasMix, 1500, DiveMode.OC, 0);
+        state2.AddSegment(5.0, gasMix, 1500, DiveMode.OC, 0);
+
+        // Act
+        var ceilingConservative = state1.CeilingMm(0.30, 0.60, DefaultContext);
+        var ceilingAggressive = state2.CeilingMm(0.30, 0.90, DefaultContext);
+
+        // Assert
+        Assert.True(ceilingConservative >= ceilingAggressive);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldHandleTrimix_WhenBothN2AndHePresent()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var trimix = new GasMix(180, 450);
+        state.AddSegment(7.0, trimix, 1200, DiveMode.OC, 0);
+
+        // Act
+        var ceilingMm = state.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert
+        Assert.True(ceilingMm > 0);
+    }
+
+    [Fact]
+    public void CeilingMm_WithGfLowHigh_ShouldHandleHighAltitude_WhenSurfacePressureLow()
+    {
+        // Arrange
+        var state = new DecoState();
+        var altitudePressureBar = 0.85;
+        state.Clear(altitudePressureBar);
+
+        var context = new DiveContext((ushort)(altitudePressureBar * 1000), WaterType.Fresh);
+        var gasMix = new GasMix(210, 0);
+        state.AddSegment(4.0, gasMix, 1200, DiveMode.OC, 0);
+
+        // Act
+        var ceilingMm = state.CeilingMm(0.30, 0.70, context);
+
+        // Assert
+        Assert.True(ceilingMm <= 13000);
+    }
+
+    #endregion
+
+    #region Single GF CeilingMm GfLowPressureThisDive Update Tests
+
+    [Fact]
+    public void CeilingMm_SingleGf_ShouldUpdateGfLowPressureThisDive_WhenCeilingIsDeeper()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+        state.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
+
+        var initialGfLowPressure = state.GfLowPressureThisDive;
+
+        // Act
+        state.CeilingMm(0.70, DefaultContext);
+
+        // Assert
+        Assert.True(state.GfLowPressureThisDive > initialGfLowPressure);
+    }
+
+    [Fact]
+    public void CeilingMm_SingleGf_ShouldNotDecreaseGfLowPressureThisDive_WhenCeilingIsShallower()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+
+        // Deep dive to set a deep GfLowPressureThisDive
+        state.AddSegment(7.0, gasMix, 1800, DiveMode.OC, 0);
+        state.CeilingMm(0.70, DefaultContext);
+        var deepGfLowPressure = state.GfLowPressureThisDive;
+
+        // Simulate offgassing
+        state.AddSegment(2.0, gasMix, 3600, DiveMode.OC, 0);
+
+        // Act
+        state.CeilingMm(0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(deepGfLowPressure, state.GfLowPressureThisDive);
+    }
+
+    #endregion
+
+    #region Consistency Tests
+
+    [Fact]
+    public void CeilingMm_ShouldBeConsistent_WhenGfLowEqualsGfHigh()
+    {
+        // Arrange
+        var state1 = new DecoState();
+        var state2 = new DecoState();
+        state1.Clear(StandardPressureBar);
+        state2.Clear(StandardPressureBar);
+
+        var gasMix = new GasMix(210, 0);
+        state1.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
+        state2.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
+
+        // Act
+        var ceilingSingleGf = state1.CeilingMm(0.70, DefaultContext);
+        var ceilingDualGf = state2.CeilingMm(0.70, 0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(ceilingSingleGf, ceilingDualGf);
+    }
+
+    [Fact]
+    public void CeilingMm_BothOverloads_ShouldUpdateGfLowPressureThisDive_Consistently()
+    {
+        // Arrange
+        var state1 = new DecoState();
+        var state2 = new DecoState();
+        state1.Clear(StandardPressureBar);
+        state2.Clear(StandardPressureBar);
+
+        var gasMix = new GasMix(210, 0);
+        state1.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
+        state2.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
+
+        // Act
+        state1.CeilingMm(0.30, DefaultContext);
+        state2.CeilingMm(0.30, 0.70, DefaultContext);
+
+        // Assert - Both should have updated GfLowPressureThisDive based on GF 0.30 ceiling
+        Assert.Equal(state1.GfLowPressureThisDive, state2.GfLowPressureThisDive);
+    }
+
+    #endregion
+
     #region GetInertPressure Tests
 
     [Fact]
-    public unsafe void GetInertPressure_Should_ReturnSumOfN2AndHe_WhenCalled()
+    public unsafe void GetInertPressure_ShouldReturnSumOfN2AndHe_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -445,7 +686,7 @@ public class DecoStateTests
     [InlineData(5)]
     [InlineData(10)]
     [InlineData(15)]
-    public void GetInertPressure_Should_ReturnValidValue_WhenCalledForAnyCompartment(int compartmentIndex)
+    public void GetInertPressure_ShouldReturnValidValue_WhenCalledForAnyCompartment(int compartmentIndex)
     {
         // Arrange
         var state = new DecoState();
@@ -465,7 +706,7 @@ public class DecoStateTests
     #region Clone Tests
 
     [Fact]
-    public unsafe void Clone_Should_CreateIndependentCopy_WhenCalled()
+    public unsafe void Clone_ShouldCreateIndependentCopy_WhenCalled()
     {
         // Arrange
         var original = new DecoState();
@@ -486,7 +727,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void Clone_Should_CopyAllTissueCompartments_WhenCalled()
+    public unsafe void Clone_ShouldCopyAllTissueCompartments_WhenCalled()
     {
         // Arrange
         var original = new DecoState();
@@ -506,7 +747,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Clone_Should_CopyGfLowPressure_WhenCalled()
+    public void Clone_ShouldCopyGfLowPressure_WhenCalled()
     {
         // Arrange
         var original = new DecoState();
@@ -521,7 +762,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Clone_Should_CopyLeadingTissueIndex_WhenCalled()
+    public void Clone_ShouldCopyLeadingTissueIndex_WhenCalled()
     {
         // Arrange
         var original = new DecoState();
@@ -540,7 +781,7 @@ public class DecoStateTests
     #region CopyFrom Tests
 
     [Fact]
-    public unsafe void CopyFrom_Should_OverwriteCurrentState_WhenCalled()
+    public unsafe void CopyFrom_ShouldOverwriteCurrentState_WhenCalled()
     {
         // Arrange
         var state1 = new DecoState();
@@ -561,7 +802,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void CopyFrom_Should_CopyAllFields_WhenCalled()
+    public unsafe void CopyFrom_ShouldCopyAllFields_WhenCalled()
     {
         // Arrange
         var source = new DecoState();
@@ -593,7 +834,7 @@ public class DecoStateTests
     #region CreateAtSurface Tests
 
     [Fact]
-    public unsafe void CreateAtSurface_Should_ReturnInitializedState_WhenCalledWithPressure()
+    public unsafe void CreateAtSurface_ShouldReturnInitializedState_WhenCalledWithPressure()
     {
         // Arrange & Act
         var state = DecoState.CreateAtSurface(StandardPressureBar);
@@ -605,7 +846,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CreateAtSurface_Should_UseStandardPressure_WhenCalledWithoutParameters()
+    public void CreateAtSurface_ShouldUseStandardPressure_WhenCalledWithoutParameters()
     {
         // Arrange & Act
         var state = DecoState.CreateAtSurface();
@@ -616,7 +857,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CreateAtSurface_Should_InitializeLeadingTissueToZero_WhenCalled()
+    public void CreateAtSurface_ShouldInitializeLeadingTissueToZero_WhenCalled()
     {
         // Arrange & Act
         var state = DecoState.CreateAtSurface(StandardPressureBar);
@@ -630,7 +871,7 @@ public class DecoStateTests
     #region Integration Tests
 
     [Fact]
-    public void Integration_Should_HandleTypicalRecreationalDive_WhenSimulated()
+    public void Integration_ShouldHandleTypicalRecreationalDive_WhenSimulated()
     {
         // Arrange - Simulate 30m dive for 30 minutes on air
         var state = new DecoState();
@@ -649,7 +890,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Integration_Should_HandleTechnicalTrimixDive_WhenSimulated()
+    public void Integration_ShouldHandleTechnicalTrimixDive_WhenSimulated()
     {
         // Arrange - Deep trimix dive
         var state = new DecoState();
@@ -671,7 +912,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public unsafe void Integration_Should_HandleCCRDive_WhenSimulated()
+    public unsafe void Integration_ShouldHandleCCRDive_WhenSimulated()
     {
         // Arrange
         var state = new DecoState();
@@ -689,7 +930,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void Integration_Should_HandleRepetitiveDives_WhenSimulated()
+    public void Integration_ShouldHandleRepetitiveDives_WhenSimulated()
     {
         // Arrange
         var state = new DecoState();
@@ -720,7 +961,7 @@ public class DecoStateTests
     #region Edge Case Tests
 
     [Fact]
-    public unsafe void AddSegment_Should_HandleZeroDuration_WhenCalled()
+    public unsafe void AddSegment_ShouldHandleZeroDuration_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -736,7 +977,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_HandleZeroGradientFactor_WhenCalled()
+    public void CeilingBar_ShouldHandleZeroGradientFactor_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -752,7 +993,7 @@ public class DecoStateTests
     }
 
     [Fact]
-    public void CeilingBar_Should_HandleGradientFactorOfOne_WhenCalled()
+    public void CeilingBar_ShouldHandleGradientFactorOfOne_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
@@ -763,12 +1004,12 @@ public class DecoStateTests
         // Act
         var ceiling = state.CeilingBar(1.0);
 
-        // Assert - GF of 1.0 means no conservatism
+        // Assert
         Assert.True(ceiling >= 0);
     }
 
     [Fact]
-    public unsafe void AddSegment_Should_HandleVeryLongDuration_WhenCalled()
+    public unsafe void AddSegment_ShouldHandleVeryLongDuration_WhenCalled()
     {
         // Arrange
         var state = new DecoState();
