@@ -139,35 +139,94 @@ public unsafe struct DecoState
         double gfHigh,
         DiveContext context)
     {
-        var ceilingBarAtGfLow = CeilingBar(gfLow);
-
-        if (ceilingBarAtGfLow > GfLowPressureThisDive)
-        {
-            GfLowPressureThisDive = ceilingBarAtGfLow;
-        }
+        ref readonly var coeff = ref BuhlmannCoefficients.ZHL16C;
 
         var surfacePressureBar = context.SurfacePressureMbar / 1000.0;
+        var lowestCeiling = 0.0;
 
-        double interpolatedGf;
-        if (GfLowPressureThisDive <= surfacePressureBar)
+        for (var i = 0; i < BuhlmannCoefficients.CompartmentCount; i++)
         {
-            interpolatedGf = gfHigh;
+            var pInert = TissueN2Sat[i] + TissueHeSat[i];
+
+            double a, b;
+            if (pInert > 0)
+            {
+                a = (coeff.N2A[i] * TissueN2Sat[i] + coeff.HeA[i] * TissueHeSat[i]) / pInert;
+                b = (coeff.N2B[i] * TissueN2Sat[i] + coeff.HeB[i] * TissueHeSat[i]) / pInert;
+            }
+            else
+            {
+                a = coeff.N2A[i];
+                b = coeff.N2B[i];
+            }
+
+            var tissueCeiling = (b * pInert - gfLow * a * b) / ((1.0 - b) * gfLow + b);
+
+            if (tissueCeiling > lowestCeiling)
+            {
+                lowestCeiling = tissueCeiling;
+            }
         }
-        else
+
+        if (lowestCeiling > GfLowPressureThisDive)
         {
-            var ratio = (ceilingBarAtGfLow - surfacePressureBar) / (GfLowPressureThisDive - surfacePressureBar);
-            interpolatedGf = gfHigh + (gfLow - gfHigh) * ratio;
+            GfLowPressureThisDive = lowestCeiling;
         }
 
-        var ceilingBar = CeilingBar(interpolatedGf);
-        var ceilingMbar = (uint)(ceilingBar * 1000);
+        var maxCeiling = 0.0;
+        var leadingIdx = 0;
 
-        if (ceilingMbar <= context.SurfacePressureMbar)
+        for (var i = 0; i < BuhlmannCoefficients.CompartmentCount; i++)
+        {
+            var pInert = TissueN2Sat[i] + TissueHeSat[i];
+
+            double a, b;
+            if (pInert > 0)
+            {
+                a = (coeff.N2A[i] * TissueN2Sat[i] + coeff.HeA[i] * TissueHeSat[i]) / pInert;
+                b = (coeff.N2B[i] * TissueN2Sat[i] + coeff.HeB[i] * TissueHeSat[i]) / pInert;
+            }
+            else
+            {
+                a = coeff.N2A[i];
+                b = coeff.N2B[i];
+            }
+
+            double tolerated;
+
+            var mValueAtSurface = (surfacePressureBar / b + a - surfacePressureBar) * gfHigh + surfacePressureBar;
+            var mValueAtFirstStop =
+                (GfLowPressureThisDive / b + a - GfLowPressureThisDive) * gfLow + GfLowPressureThisDive;
+
+            if (mValueAtSurface < mValueAtFirstStop)
+            {
+                tolerated = (-a * b * (gfHigh * GfLowPressureThisDive - gfLow * surfacePressureBar) -
+                             (1.0 - b) * (gfHigh - gfLow) * GfLowPressureThisDive * surfacePressureBar +
+                             b * (GfLowPressureThisDive - surfacePressureBar) * pInert) /
+                            (-a * b * (gfHigh - gfLow) +
+                             (1.0 - b) * (gfLow * GfLowPressureThisDive - gfHigh * surfacePressureBar) +
+                             b * (GfLowPressureThisDive - surfacePressureBar));
+            }
+            else
+            {
+                tolerated = maxCeiling;
+            }
+
+            if (tolerated > maxCeiling)
+            {
+                maxCeiling = tolerated;
+                leadingIdx = i;
+            }
+        }
+
+        LeadingTissueIndex = leadingIdx;
+
+        if (maxCeiling * 1000 <= context.SurfacePressureMbar)
         {
             return 0;
         }
 
-        return context.MbarToDepthMm(ceilingMbar);
+        return context.MbarToDepthMm((uint)(maxCeiling * 1000));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
