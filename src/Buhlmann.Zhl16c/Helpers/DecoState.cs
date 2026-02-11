@@ -11,6 +11,8 @@ public unsafe struct DecoState
     public fixed double TissueHeSat[16];
     public double GfLowPressureThisDive;
     public int LeadingTissueIndex;
+    public double SatMult;
+    public double DesatMult;
 
     public void Clear(double surfacePressureBar)
     {
@@ -23,8 +25,10 @@ public unsafe struct DecoState
             TissueHeSat[i] = 0.0;
         }
 
-        GfLowPressureThisDive = surfacePressureBar;
+        GfLowPressureThisDive = surfacePressureBar + 1.0;
         LeadingTissueIndex = 0;
+        SatMult = 1.0;
+        DesatMult = 1.0;
     }
 
     public void AddSegment(
@@ -71,8 +75,14 @@ public unsafe struct DecoState
             var n2Factor = coeff.Factor(periodSeconds, i, false);
             var heFactor = coeff.Factor(periodSeconds, i, true);
 
-            TissueN2Sat[i] += (ppN2 - TissueN2Sat[i]) * n2Factor;
-            TissueHeSat[i] += (ppHe - TissueHeSat[i]) * heFactor;
+            var pn2Oversat = ppN2 - TissueN2Sat[i];
+            var pheOversat = ppHe - TissueHeSat[i];
+            
+            var n2Mult = pn2Oversat > 0 ? SatMult : DesatMult;
+            var heMult = pheOversat > 0 ? SatMult : DesatMult;
+            
+            TissueN2Sat[i] += n2Mult * pn2Oversat * n2Factor;
+            TissueHeSat[i] += heMult * pheOversat * heFactor;
         }
     }
 

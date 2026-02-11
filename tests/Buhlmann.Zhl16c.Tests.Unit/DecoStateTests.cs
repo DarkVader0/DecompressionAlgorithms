@@ -59,7 +59,7 @@ public class DecoStateTests
         state.Clear(surfacePressure);
 
         // Assert
-        Assert.Equal(surfacePressure, state.GfLowPressureThisDive);
+        Assert.Equal(surfacePressure + 1, state.GfLowPressureThisDive);
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class DecoStateTests
         state.Clear(pressure);
 
         // Assert
-        Assert.Equal(pressure, state.GfLowPressureThisDive);
+        Assert.Equal(pressure + 1, state.GfLowPressureThisDive);
         Assert.True(state.TissueN2Sat[0] > 0);
     }
 
@@ -840,7 +840,7 @@ public class DecoStateTests
         var state = DecoState.CreateAtSurface(StandardPressureBar);
 
         // Assert
-        Assert.Equal(StandardPressureBar, state.GfLowPressureThisDive);
+        Assert.Equal(StandardPressureBar + 1, state.GfLowPressureThisDive);
         Assert.True(state.TissueN2Sat[0] > 0);
         Assert.Equal(0.0, state.TissueHeSat[0]);
     }
@@ -853,7 +853,7 @@ public class DecoStateTests
 
         // Assert
         var expectedPressure = GasConstants.StandardPressureMbar / 1000.0;
-        Assert.Equal(expectedPressure, state.GfLowPressureThisDive, Tolerance);
+        Assert.Equal(expectedPressure + 1, state.GfLowPressureThisDive, Tolerance);
     }
 
     [Fact]
@@ -879,14 +879,12 @@ public class DecoStateTests
         var air = new GasMix(210, 0);
 
         // Act
-        // Descend to 30m (4 bar)
-        state.AddSegment(4.0, air, 1800, DiveMode.OC, 0); // 30 minutes at depth
+        state.AddSegment(4.0, air, 1800, DiveMode.OC, 0);
 
-        // Check ceiling
         var ceiling = state.CeilingBar(0.8);
 
-        // Assert - Should have some ceiling after this dive
-        Assert.True(ceiling >= StandardPressureBar); // May or may not need stops
+        // Assert
+        Assert.True(ceiling >= StandardPressureBar);
     }
 
     [Fact]
