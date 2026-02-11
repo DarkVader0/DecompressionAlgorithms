@@ -13,6 +13,7 @@ public unsafe struct DecoState
     public int LeadingTissueIndex;
     public double SatMult;
     public double DesatMult;
+    public bool IdcWarning;
 
     public void Clear(double surfacePressureBar)
     {
@@ -29,6 +30,19 @@ public unsafe struct DecoState
         LeadingTissueIndex = 0;
         SatMult = 1.0;
         DesatMult = 1.0;
+        IdcWarning = false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool CheckIdc(double pn2Oversat,
+        double pheOversat,
+        double n2Mult,
+        double heMult,
+        double n2Factor,
+        double heFactor)
+    {
+        return pn2Oversat > 0.0 && pheOversat < 0.0 &&
+               pn2Oversat * n2Mult * n2Factor + pheOversat * heMult * heFactor > 0.0;
     }
 
     public void AddSegment(
@@ -77,10 +91,15 @@ public unsafe struct DecoState
 
             var pn2Oversat = ppN2 - TissueN2Sat[i];
             var pheOversat = ppHe - TissueHeSat[i];
-            
+
             var n2Mult = pn2Oversat > 0 ? SatMult : DesatMult;
             var heMult = pheOversat > 0 ? SatMult : DesatMult;
             
+            if(i == LeadingTissueIndex && CheckIdc(pn2Oversat, pheOversat, n2Mult, heMult, n2Factor, heFactor))
+            {
+                IdcWarning = true;
+            }
+
             TissueN2Sat[i] += n2Mult * pn2Oversat * n2Factor;
             TissueHeSat[i] += heMult * pheOversat * heFactor;
         }
