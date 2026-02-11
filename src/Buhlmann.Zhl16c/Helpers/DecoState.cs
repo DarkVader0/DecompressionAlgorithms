@@ -13,7 +13,7 @@ public unsafe struct DecoState
     public int LeadingTissueIndex;
     public double SatMult;
     public double DesatMult;
-    public bool IdcWarning;
+    public bool IcdWarning;
 
     public void Clear(double surfacePressureBar)
     {
@@ -30,11 +30,11 @@ public unsafe struct DecoState
         LeadingTissueIndex = 0;
         SatMult = 1.0;
         DesatMult = 1.0;
-        IdcWarning = false;
+        IcdWarning = false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool CheckIdc(double pn2Oversat,
+    private static bool CheckIcd(double pn2Oversat,
         double pheOversat,
         double n2Mult,
         double heMult,
@@ -83,6 +83,8 @@ public unsafe struct DecoState
             ppN2 = ambientPressure * gasMix.N2Permille / 1000.0;
             ppHe = ambientPressure * gasMix.HePermille / 1000.0;
         }
+        
+        IcdWarning = false;
 
         for (var i = 0; i < BuhlmannCoefficients.CompartmentCount; i++)
         {
@@ -95,9 +97,9 @@ public unsafe struct DecoState
             var n2Mult = pn2Oversat > 0 ? SatMult : DesatMult;
             var heMult = pheOversat > 0 ? SatMult : DesatMult;
             
-            if(i == LeadingTissueIndex && CheckIdc(pn2Oversat, pheOversat, n2Mult, heMult, n2Factor, heFactor))
+            if(i == LeadingTissueIndex && CheckIcd(pn2Oversat, pheOversat, n2Mult, heMult, n2Factor, heFactor))
             {
-                IdcWarning = true;
+                IcdWarning = true;
             }
 
             TissueN2Sat[i] += n2Mult * pn2Oversat * n2Factor;
@@ -276,6 +278,10 @@ public unsafe struct DecoState
 
         copy.GfLowPressureThisDive = GfLowPressureThisDive;
         copy.LeadingTissueIndex = LeadingTissueIndex;
+        
+        copy.IcdWarning = IcdWarning;
+        copy.SatMult = SatMult;
+        copy.DesatMult = DesatMult;
 
         return copy;
     }
@@ -290,6 +296,10 @@ public unsafe struct DecoState
 
         GfLowPressureThisDive = other.GfLowPressureThisDive;
         LeadingTissueIndex = other.LeadingTissueIndex;
+        
+        IcdWarning = other.IcdWarning;
+        SatMult = other.SatMult;
+        DesatMult = other.DesatMult;
     }
 
     public static DecoState CreateAtSurface(double surfacePressureBar)
