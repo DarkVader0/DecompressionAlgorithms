@@ -83,7 +83,7 @@ public unsafe struct DecoState
             ppN2 = ambientPressure * gasMix.N2Permille / 1000.0;
             ppHe = ambientPressure * gasMix.HePermille / 1000.0;
         }
-        
+
         IcdWarning = false;
 
         for (var i = 0; i < BuhlmannCoefficients.CompartmentCount; i++)
@@ -96,8 +96,8 @@ public unsafe struct DecoState
 
             var n2Mult = pn2Oversat > 0 ? SatMult : DesatMult;
             var heMult = pheOversat > 0 ? SatMult : DesatMult;
-            
-            if(i == LeadingTissueIndex && CheckIcd(pn2Oversat, pheOversat, n2Mult, heMult, n2Factor, heFactor))
+
+            if (i == LeadingTissueIndex && CheckIcd(pn2Oversat, pheOversat, n2Mult, heMult, n2Factor, heFactor))
             {
                 IcdWarning = true;
             }
@@ -278,7 +278,7 @@ public unsafe struct DecoState
 
         copy.GfLowPressureThisDive = GfLowPressureThisDive;
         copy.LeadingTissueIndex = LeadingTissueIndex;
-        
+
         copy.IcdWarning = IcdWarning;
         copy.SatMult = SatMult;
         copy.DesatMult = DesatMult;
@@ -296,7 +296,7 @@ public unsafe struct DecoState
 
         GfLowPressureThisDive = other.GfLowPressureThisDive;
         LeadingTissueIndex = other.LeadingTissueIndex;
-        
+
         IcdWarning = other.IcdWarning;
         SatMult = other.SatMult;
         DesatMult = other.DesatMult;
