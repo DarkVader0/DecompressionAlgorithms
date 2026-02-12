@@ -21,16 +21,16 @@ public struct DiveContext
         };
     }
 
-    private double SpecificWeight => Salinity * 0.981 / 100000.0;
+    private readonly double SpecificWeight => Salinity * 0.981 / 100000.0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint DepthToMbar(uint depthMm)
+    public readonly uint DepthToMbar(uint depthMm)
     {
         return (uint)(SurfacePressureMbar + SpecificWeight * depthMm);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public double DepthToBar(uint depthMm)
+    public readonly double DepthToBar(uint depthMm)
     {
         return DepthToMbar(depthMm) / 1000.0;
     }
