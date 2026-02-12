@@ -27,13 +27,4 @@ public static class AscentRate
 
         return settings.AscentRateLast6mMmSec;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint AscentPerTimestep(uint currentDepthMm,
-        uint avgDepthMm,
-        int timestepSec,
-        AscentDescentSettings settings)
-    {
-        return (uint)(GetAscentRate(currentDepthMm, avgDepthMm, settings) * timestepSec);
-    }
 }
