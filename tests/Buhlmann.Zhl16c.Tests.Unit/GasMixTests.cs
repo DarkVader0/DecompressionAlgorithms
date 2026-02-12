@@ -2,7 +2,7 @@
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class GasMixTests
+public sealed class GasMixTests
 {
     [Fact]
     public void N2Permille_ShouldBeRemainderToOneThousand()

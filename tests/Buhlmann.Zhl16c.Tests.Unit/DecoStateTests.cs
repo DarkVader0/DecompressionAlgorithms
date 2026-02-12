@@ -5,7 +5,7 @@ using Buhlmann.Zhl16c.Helpers;
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class DecoStateTests
+public sealed class DecoStateTests
 {
     private const double StandardPressureBar = 1.01325;
     private const double Tolerance = 0.0001;

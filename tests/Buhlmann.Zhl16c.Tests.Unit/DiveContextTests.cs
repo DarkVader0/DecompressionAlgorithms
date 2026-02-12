@@ -4,7 +4,7 @@ using Buhlmann.Zhl16c.Helpers;
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class DiveContextTests
+public sealed class DiveContextTests
 {
     [Fact]
     public void DepthToMbar_ShouldReturnSurfacePressure_WhenDepthIsZero()

@@ -2,7 +2,7 @@
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class BuhlmannCoefficientTests
+public sealed class BuhlmannCoefficientTests
 {
     [Fact]
     public unsafe void Zhl16C_ShouldLoadAllTissues_WithExpectedSentinelValues()

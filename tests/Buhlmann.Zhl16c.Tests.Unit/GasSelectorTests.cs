@@ -4,7 +4,7 @@ using Buhlmann.Zhl16c.Input;
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class GasSelectorTests
+public sealed class GasSelectorTests
 {
     private static DiveContext DefaultContext => DiveContext.Default;
 

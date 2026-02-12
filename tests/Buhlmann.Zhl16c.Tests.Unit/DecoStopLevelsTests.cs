@@ -2,7 +2,7 @@
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class DecoStopLevelsTests
+public sealed class DecoStopLevelsTests
 {
     [Fact]
     public void GetNextStopLevel_ShouldReturn0_WhenDepthIs0()

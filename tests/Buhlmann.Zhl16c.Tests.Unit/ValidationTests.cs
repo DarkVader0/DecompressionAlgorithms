@@ -5,7 +5,7 @@ using Buhlmann.Zhl16c.Utilities;
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
-public class ValidationTests
+public sealed class ValidationTests
 {
     [Fact]
     public void ValidateCylinder_ShouldReturnOk_WhenCylinderIsValid()
