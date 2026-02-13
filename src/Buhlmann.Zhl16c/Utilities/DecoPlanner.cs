@@ -148,7 +148,7 @@ public static class DecoPlanner
         Span<GasSelector.GasChange> gasChanges = stackalloc GasSelector.GasChange[cylinders.Length];
         var gasChangeCount = (int)GasSelector.BuildGasChangeList(
             cylinders, maxDepthMm, settings.Gas.DecoPo2Mbar, context, gasChanges);
-        var gi = gasChangeCount - 1;
+        var gi = 0;
 
         var stopLevels = DecoStopLevels.Mm;
 
@@ -226,7 +226,7 @@ public static class DecoPlanner
                 break;
             }
 
-            if (gi >= 0 && depthMm <= gasChanges[gi].DepthMm)
+            if (gi < gasChangeCount && depthMm <= gasChanges[gi].DepthMm)
             {
                 var newCylIdx = (int)gasChanges[gi].CylinderIndex;
                 if (newCylIdx != currentCylIdx)
@@ -259,7 +259,7 @@ public static class DecoPlanner
                     }
                 }
 
-                gi--;
+                gi++;
             }
 
             if (stopIdx > minStopIdx || stopIdx > 0)
