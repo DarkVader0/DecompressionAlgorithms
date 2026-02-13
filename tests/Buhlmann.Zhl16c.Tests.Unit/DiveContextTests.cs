@@ -133,7 +133,7 @@ public sealed class DiveContextTests
     }
 
     [Fact]
-    public void GasModMmSimple_ShouldReturn21m_WhenNx50()
+    public void GasModMmSimple_ShouldReturn22m_WhenNx50()
     {
         // Arrange
         var ctx = DiveContext.Default;
@@ -141,10 +141,10 @@ public sealed class DiveContextTests
         const uint roundToMm = 1000;
 
         // Act
-        var mod14 = ctx.GasModMmSimple(mix, 1600, roundToMm);
+        var mod = ctx.GasModMmSimple(mix, 1600, roundToMm);
 
         // Assert
-        Assert.Equal(21000u, mod14);
+        Assert.Equal(22000u, mod);
     }
 
     [Fact]
@@ -166,6 +166,21 @@ public sealed class DiveContextTests
     }
 
     [Fact]
+    public void GasModMm_ShouldBe6m_ForPureO2On16ppo2Limit()
+    {
+        // Arrange
+        var ctx = DiveContext.Default;
+        var o2 = new GasMix(1000, 0);
+        const uint roundToMm = 3000;
+
+        // Act
+        var mod = ctx.GasModMm(o2, 1600, roundToMm);
+
+        // Assert
+        Assert.Equal(6000u, mod);
+    }
+
+    [Fact]
     public void GasModMm_ShouldBeApproximatelyZero_ForPureOxygenAtOneBarPo2Limit()
     {
         // Arrange
@@ -177,7 +192,7 @@ public sealed class DiveContextTests
         var mod = ctx.GasModMm(o2, 1000, roundToMm);
 
         // Assert
-        Assert.InRange(mod, 0u, 1000u);
+        Assert.Equal(0u, mod);
     }
 
     [Fact]

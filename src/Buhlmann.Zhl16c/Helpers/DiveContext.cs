@@ -57,10 +57,11 @@ public struct DiveContext
         uint po2LimitMbar,
         uint roundToMm)
     {
-        var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
-        var depthMm = (double)MbarToDepthMm(maxPressureMbar);
-
-        return (uint)(depthMm / roundToMm + 0.1) * roundToMm;
+        return GasModMmSimple(mix, po2LimitMbar, roundToMm);
+        // var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
+        // var depthMm = (double)MbarToDepthMm(maxPressureMbar);
+        //
+        // return (uint)(depthMm / roundToMm + 0.1) * roundToMm;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -69,7 +70,7 @@ public struct DiveContext
         uint roundToMm)
     {
         var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
-        var depthMm = (double)(maxPressureMbar - SurfacePressureMbar) * 10;
+        var depthMm = (double)(maxPressureMbar - 1000) * 10;
 
         var steps = depthMm / roundToMm;
 
