@@ -4,6 +4,7 @@ using Buhlmann.Zhl16c.Helpers;
 using Buhlmann.Zhl16c.Input;
 using Buhlmann.Zhl16c.Settings;
 using Buhlmann.Zhl16c.Utilities;
+using Xunit.Abstractions;
 
 namespace Buhlmann.Zhl16c.Tests.Unit;
 
@@ -78,13 +79,8 @@ public sealed class DecoPlannerTests
             }
         ];
 
-        var sw = new Stopwatch();
-        sw.Start();
         // Act
         var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-        sw.Stop();
-
-        Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
 
 
         // Assert
@@ -92,7 +88,12 @@ public sealed class DecoPlannerTests
 
         for (var i = 0; i < steps; i++)
         {
-            Console.WriteLine(plan.Segments[i].RuntimeStartSec + " - " + plan.Segments[i].RuntimeEndSec);
+            var segment = plan.Segments[i];
+            if ((segment.RuntimeEndSec - segment.RuntimeStartSec) / 60 == 0)
+            {
+                continue;
+            }
+            Console.WriteLine(plan.Segments[i].ToString());
         }
     }
 }

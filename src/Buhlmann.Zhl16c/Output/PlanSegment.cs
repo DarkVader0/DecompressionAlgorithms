@@ -15,4 +15,9 @@ public struct PlanSegment
     public SegmentType SegmentType;
     public ushort SetpointMbar;
     public DiveMode DiveMode;
+
+    public override string ToString()
+    {
+        return $"{DepthStartMm / 1000} -> {DepthEndMm / 1000} | {Math.Round((RuntimeEndSec - RuntimeStartSec) / 60.0, 0)} | {RuntimeEndSec / 60}";
+    }
 }
