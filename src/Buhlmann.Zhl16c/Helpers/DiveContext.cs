@@ -90,7 +90,7 @@ public struct DiveContext
     {
         var pNarcoticMbar = DepthToMbar(endMm);
 
-        int maxAmbientMbar = 1000000;
+        var maxAmbientMbar = 1000000;
         if (o2IsNarcotic)
         {
             maxAmbientMbar = (int)(pNarcoticMbar / 1.0 - mix.HePermille / 1000.0);

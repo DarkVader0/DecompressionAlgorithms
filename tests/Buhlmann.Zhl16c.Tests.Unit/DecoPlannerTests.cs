@@ -83,10 +83,10 @@ public sealed class DecoPlannerTests
         // Act
         var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
         sw.Stop();
-        
+
         Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
-        
-        
+
+
         // Assert
         var steps = plan.SegmentCount;
 

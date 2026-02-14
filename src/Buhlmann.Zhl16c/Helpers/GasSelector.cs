@@ -53,7 +53,7 @@ public static class GasSelector
             count++;
         }
 
-        return (int)count;
+        return count;
     }
 
     public static int FindBottomGas(ReadOnlySpan<Cylinder> cylinders)

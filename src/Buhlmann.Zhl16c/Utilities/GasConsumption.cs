@@ -34,7 +34,7 @@ public static class GasConsumption
         int endDepthMm,
         int rateMmMin)
     {
-        var distanceMm = Math.Abs((int)endDepthMm - (int)startDepthMm);
+        var distanceMm = Math.Abs(endDepthMm - startDepthMm);
 
         return (int)(distanceMm * 60.0 / rateMmMin);
     }

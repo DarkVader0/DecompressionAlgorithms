@@ -43,9 +43,9 @@ public static class DecoPlanner
         var diveMode = settings.Rebreather.DiveMode;
         var setpointMbar = diveMode == DiveMode.CCR ? settings.Rebreather.SetpointMbar : 0;
 
-        int depthMm = 0;
+        var depthMm = 0;
         var clock = 0;
-        int maxDepthMm = 0;
+        var maxDepthMm = 0;
         long depthTimeIntegral = 0;
 
         foreach (var waypoint in waypoints)
@@ -61,7 +61,7 @@ public static class DecoPlanner
             for (var sec = 0; sec < duration; sec++)
             {
                 var interpDepthMm = startDepthMm +
-                                    (int)((endDepthMm - startDepthMm) * sec / duration);
+                                    (endDepthMm - startDepthMm) * sec / duration;
 
                 ds.AddSegment(
                     context.DepthToBar(interpDepthMm),
@@ -72,8 +72,8 @@ public static class DecoPlanner
 
             result.Segments[segmentCount++] = new PlanSegment
             {
-                RuntimeStartSec = (int)clock,
-                RuntimeEndSec = (int)(clock + duration),
+                RuntimeStartSec = clock,
+                RuntimeEndSec = clock + duration,
                 DepthStartMm = startDepthMm,
                 DepthEndMm = endDepthMm,
                 CylinderIndex = (byte)cylIdx,
@@ -132,8 +132,8 @@ public static class DecoPlanner
 
             result.Segments[segmentCount++] = new PlanSegment
             {
-                RuntimeStartSec = (int)clock,
-                RuntimeEndSec = (int)(clock + bailoutSec),
+                RuntimeStartSec = clock,
+                RuntimeEndSec = clock + bailoutSec,
                 DepthStartMm = depthMm,
                 DepthEndMm = depthMm,
                 CylinderIndex = (byte)currentCylIdx,
@@ -146,7 +146,7 @@ public static class DecoPlanner
         }
 
         Span<GasSelector.GasChange> gasChanges = stackalloc GasSelector.GasChange[cylinders.Length];
-        var gasChangeCount = (int)GasSelector.BuildGasChangeList(
+        var gasChangeCount = GasSelector.BuildGasChangeList(
             cylinders, maxDepthMm, settings.Gas.DecoPo2Mbar, context, gasChanges);
         var gi = 0;
 
@@ -190,7 +190,7 @@ public static class DecoPlanner
             while (depthMm > nextStopMm)
             {
                 var rateMmSec = AscentRate.GetAscentRate(depthMm, avgDepthMm, settings.AscentDescent);
-                var deltad = (int)(rateMmSec * BaseTimestep);
+                var deltad = rateMmSec * BaseTimestep;
 
                 if (depthMm - deltad < nextStopMm)
                 {
@@ -209,8 +209,8 @@ public static class DecoPlanner
             {
                 result.Segments[segmentCount++] = new PlanSegment
                 {
-                    RuntimeStartSec = (int)ascentStartClock,
-                    RuntimeEndSec = (int)clock,
+                    RuntimeStartSec = ascentStartClock,
+                    RuntimeEndSec = clock,
                     DepthStartMm = ascentStartDepth,
                     DepthEndMm = depthMm,
                     CylinderIndex = (byte)currentCylIdx,
@@ -238,8 +238,8 @@ public static class DecoPlanner
 
                     result.Segments[segmentCount++] = new PlanSegment
                     {
-                        RuntimeStartSec = (int)clock,
-                        RuntimeEndSec = (int)clock,
+                        RuntimeStartSec = clock,
+                        RuntimeEndSec = clock,
                         DepthStartMm = depthMm,
                         DepthEndMm = depthMm,
                         CylinderIndex = (byte)currentCylIdx,
@@ -317,8 +317,8 @@ public static class DecoPlanner
 
                             result.Segments[segmentCount++] = new PlanSegment
                             {
-                                RuntimeStartSec = (int)clock,
-                                RuntimeEndSec = (int)(clock + lastStopTime),
+                                RuntimeStartSec = clock,
+                                RuntimeEndSec = clock + lastStopTime,
                                 DepthStartMm = depthMm,
                                 DepthEndMm = depthMm,
                                 CylinderIndex = (byte)currentCylIdx,
@@ -343,8 +343,8 @@ public static class DecoPlanner
 
                             result.Segments[segmentCount++] = new PlanSegment
                             {
-                                RuntimeStartSec = (int)clock,
-                                RuntimeEndSec = (int)(clock + lastStopTime),
+                                RuntimeStartSec = clock,
+                                RuntimeEndSec = clock + lastStopTime,
                                 DepthStartMm = depthMm,
                                 DepthEndMm = depthMm,
                                 CylinderIndex = (byte)currentCylIdx,
@@ -373,8 +373,8 @@ public static class DecoPlanner
                 {
                     result.Segments[segmentCount++] = new PlanSegment
                     {
-                        RuntimeStartSec = (int)clock,
-                        RuntimeEndSec = (int)(clock + lastStopTime),
+                        RuntimeStartSec = clock,
+                        RuntimeEndSec = clock + lastStopTime,
                         DepthStartMm = depthMm,
                         DepthEndMm = depthMm,
                         CylinderIndex = (byte)stopCylIdx,
@@ -395,9 +395,9 @@ public static class DecoPlanner
         }
 
         result.SegmentCount = (ushort)segmentCount;
-        result.TimeTotalSec = (int)clock;
-        result.BottomTimeSec = (int)bottomTime;
-        result.DecoTimeSec = (int)(clock - bottomTime);
+        result.TimeTotalSec = clock;
+        result.BottomTimeSec = bottomTime;
+        result.DecoTimeSec = clock - bottomTime;
         result.MaxDepthMm = maxDepthMm;
         result.AvgDepthMm = avgDepthMm;
 

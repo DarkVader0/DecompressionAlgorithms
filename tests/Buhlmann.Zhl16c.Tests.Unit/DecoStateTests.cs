@@ -11,6 +11,58 @@ public sealed class DecoStateTests
     private const double Tolerance = 0.0001;
     private static DiveContext DefaultContext => DiveContext.Default;
 
+    #region Single GF CeilingMm GfLowPressureThisDive Update Tests
+
+    [Fact]
+    public void CeilingMm_SingleGf_ShouldNotDecreaseGfLowPressureThisDive_WhenCeilingIsShallower()
+    {
+        // Arrange
+        var state = new DecoState();
+        state.Clear(StandardPressureBar);
+        var gasMix = new GasMix(210, 0);
+
+        // Deep dive to set a deep GfLowPressureThisDive
+        state.AddSegment(7.0, gasMix, 1800, DiveMode.OC, 0);
+        state.CeilingMm(0.70, DefaultContext);
+        var deepGfLowPressure = state.GfLowPressureThisDive;
+
+        // Simulate offgassing
+        state.AddSegment(2.0, gasMix, 3600, DiveMode.OC, 0);
+
+        // Act
+        state.CeilingMm(0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(deepGfLowPressure, state.GfLowPressureThisDive);
+    }
+
+    #endregion
+
+    #region Consistency Tests
+
+    [Fact]
+    public void CeilingMm_ShouldBeConsistent_WhenGfLowEqualsGfHigh()
+    {
+        // Arrange
+        var state1 = new DecoState();
+        var state2 = new DecoState();
+        state1.Clear(StandardPressureBar);
+        state2.Clear(StandardPressureBar);
+
+        var gasMix = new GasMix(210, 0);
+        state1.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
+        state2.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
+
+        // Act
+        var ceilingSingleGf = state1.CeilingMm(0.70, DefaultContext);
+        var ceilingDualGf = state2.CeilingMm(0.70, 0.70, DefaultContext);
+
+        // Assert
+        Assert.Equal(ceilingSingleGf, ceilingDualGf);
+    }
+
+    #endregion
+
     #region Clear Tests
 
     [Fact]
@@ -567,58 +619,6 @@ public sealed class DecoStateTests
 
         // Assert
         Assert.True(ceilingMm <= 13000);
-    }
-
-    #endregion
-
-    #region Single GF CeilingMm GfLowPressureThisDive Update Tests
-
-    [Fact]
-    public void CeilingMm_SingleGf_ShouldNotDecreaseGfLowPressureThisDive_WhenCeilingIsShallower()
-    {
-        // Arrange
-        var state = new DecoState();
-        state.Clear(StandardPressureBar);
-        var gasMix = new GasMix(210, 0);
-
-        // Deep dive to set a deep GfLowPressureThisDive
-        state.AddSegment(7.0, gasMix, 1800, DiveMode.OC, 0);
-        state.CeilingMm(0.70, DefaultContext);
-        var deepGfLowPressure = state.GfLowPressureThisDive;
-
-        // Simulate offgassing
-        state.AddSegment(2.0, gasMix, 3600, DiveMode.OC, 0);
-
-        // Act
-        state.CeilingMm(0.70, DefaultContext);
-
-        // Assert
-        Assert.Equal(deepGfLowPressure, state.GfLowPressureThisDive);
-    }
-
-    #endregion
-
-    #region Consistency Tests
-
-    [Fact]
-    public void CeilingMm_ShouldBeConsistent_WhenGfLowEqualsGfHigh()
-    {
-        // Arrange
-        var state1 = new DecoState();
-        var state2 = new DecoState();
-        state1.Clear(StandardPressureBar);
-        state2.Clear(StandardPressureBar);
-
-        var gasMix = new GasMix(210, 0);
-        state1.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
-        state2.AddSegment(5.0, gasMix, 1200, DiveMode.OC, 0);
-
-        // Act
-        var ceilingSingleGf = state1.CeilingMm(0.70, DefaultContext);
-        var ceilingDualGf = state2.CeilingMm(0.70, 0.70, DefaultContext);
-
-        // Assert
-        Assert.Equal(ceilingSingleGf, ceilingDualGf);
     }
 
     #endregion

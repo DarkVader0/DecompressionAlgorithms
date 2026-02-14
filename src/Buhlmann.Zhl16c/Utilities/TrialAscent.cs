@@ -42,7 +42,7 @@ public static class TrialAscent
         while (depthMm > stopLevelMm)
         {
             var rateMmSec = AscentRate.GetAscentRate(depthMm, avgDepthMm, ascentSettings);
-            var deltadMm = (int)(rateMmSec * BaseTimestep);
+            var deltadMm = rateMmSec * BaseTimestep;
 
             if (deltadMm > depthMm)
             {
