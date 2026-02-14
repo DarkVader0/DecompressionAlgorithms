@@ -6,8 +6,8 @@ namespace Buhlmann.Zhl16c.Utilities;
 public static class AscentRate
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ushort GetAscentRate(uint currentDepthMm,
-        uint avgDepthMm,
+    public static ushort GetAscentRate(int currentDepthMm,
+        int avgDepthMm,
         AscentDescentSettings settings)
     {
         if (currentDepthMm * 4 > avgDepthMm * 3)

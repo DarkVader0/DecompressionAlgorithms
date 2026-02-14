@@ -8,7 +8,7 @@ public struct Cylinder
 {
     public ushort O2Permille;
     public ushort HePermille;
-    public uint SizeMl;
-    public uint StartPressureMbar;
+    public int SizeMl;
+    public int StartPressureMbar;
     public CylinderUse Use;
 }

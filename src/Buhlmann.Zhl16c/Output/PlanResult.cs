@@ -10,11 +10,11 @@ public struct PlanResult
     public ushort SegmentCount;
     public CylinderResult[] CylinderResults;
     public ushort CylinderCount;
-    public uint TimeTotalSec;
-    public uint BottomTimeSec;
-    public uint DecoTimeSec;
-    public uint MaxDepthMm;
-    public uint AvgDepthMm;
+    public int TimeTotalSec;
+    public int BottomTimeSec;
+    public int DecoTimeSec;
+    public int MaxDepthMm;
+    public int AvgDepthMm;
     public ushort CnsPercent;
     public ushort OtuTotal;
     public PlanError Error;

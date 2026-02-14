@@ -6,10 +6,10 @@ namespace Buhlmann.Zhl16c.Helpers;
 
 public static class GasSelector
 {
-    public static uint BuildGasChangeList(
+    public static int BuildGasChangeList(
         ReadOnlySpan<Cylinder> cylinders,
-        uint maxDepthMm,
-        uint decoPo2Mbar,
+        int maxDepthMm,
+        int decoPo2Mbar,
         DiveContext context,
         Span<GasChange> gasChanges)
     {
@@ -53,7 +53,7 @@ public static class GasSelector
             count++;
         }
 
-        return (uint)count;
+        return (int)count;
     }
 
     public static int FindBottomGas(ReadOnlySpan<Cylinder> cylinders)
@@ -71,12 +71,12 @@ public static class GasSelector
 
     public static int FindBestAscentGas(
         ReadOnlySpan<Cylinder> cylinders,
-        uint currentDepthMm,
-        uint decoPo2Mbar,
+        int currentDepthMm,
+        int decoPo2Mbar,
         DiveContext context)
     {
         var bestIndex = -1;
-        var shallowestMod = uint.MaxValue;
+        var shallowestMod = int.MaxValue;
 
         for (var i = 0; i < cylinders.Length; i++)
         {
@@ -122,8 +122,8 @@ public static class GasSelector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsGasSafeAtDepth(
         GasMix mix,
-        uint depthMm,
-        uint maxPo2Mbar,
+        int depthMm,
+        int maxPo2Mbar,
         DiveContext context)
     {
         return context.PO2Mbar(mix, depthMm) <= maxPo2Mbar;
@@ -132,7 +132,7 @@ public static class GasSelector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsGasBreathable(
         GasMix mix,
-        uint depthMm,
+        int depthMm,
         DiveContext context)
     {
         return context.PO2Mbar(mix, depthMm) >= 160;
@@ -166,8 +166,8 @@ public static class GasSelector
 
     public static int FindBailoutGas(
         ReadOnlySpan<Cylinder> cylinders,
-        uint depthMm,
-        uint bottomPo2Mbar,
+        int depthMm,
+        int bottomPo2Mbar,
         DiveContext context)
     {
         var bestIndex = -1;
@@ -219,10 +219,10 @@ public static class GasSelector
 
     public readonly struct GasChange
     {
-        public readonly uint DepthMm;
+        public readonly int DepthMm;
         public readonly ushort CylinderIndex;
 
-        public GasChange(uint depthMm, ushort cylinderIndex)
+        public GasChange(int depthMm, ushort cylinderIndex)
         {
             DepthMm = depthMm;
             CylinderIndex = cylinderIndex;

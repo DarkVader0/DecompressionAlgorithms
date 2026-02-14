@@ -12,9 +12,9 @@ public static class TrialAscent
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsClearToAscend(
         ref DecoState ds,
-        uint trialDepthMm,
-        uint stopLevelMm,
-        uint avgDepthMm,
+        int trialDepthMm,
+        int stopLevelMm,
+        int avgDepthMm,
         GasMix gasMix,
         DiveMode diveMode,
         int setpointMbar,
@@ -42,7 +42,7 @@ public static class TrialAscent
         while (depthMm > stopLevelMm)
         {
             var rateMmSec = AscentRate.GetAscentRate(depthMm, avgDepthMm, ascentSettings);
-            var deltadMm = (uint)(rateMmSec * BaseTimestep);
+            var deltadMm = (int)(rateMmSec * BaseTimestep);
 
             if (deltadMm > depthMm)
             {

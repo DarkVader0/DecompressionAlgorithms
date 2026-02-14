@@ -24,7 +24,7 @@ public sealed class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        const uint depthMm = 350000;
+        const int depthMm = 350000;
 
         // Act
         var mbar = ctx.DepthToMbar(depthMm);
@@ -39,7 +39,7 @@ public sealed class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        const uint depthMm = 350000;
+        const int depthMm = 350000;
 
         // Act
         var mbar = ctx.DepthToMbar(depthMm);
@@ -56,8 +56,8 @@ public sealed class DiveContextTests
         var ctx = new DiveContext(GasConstants.StandardPressureMbar, WaterType.Salt);
 
         var specificWeight = GasConstants.SaltWaterSalinity * 0.981 / 100000.0;
-        const uint depthMm = 20000;
-        var relMbar = (uint)(specificWeight * depthMm);
+        const int depthMm = 20000;
+        var relMbar = (int)(specificWeight * depthMm);
 
         // Act
         var resultMm = ctx.RelMbarToDepthMm(relMbar);
@@ -73,14 +73,14 @@ public sealed class DiveContextTests
         var ctx = DiveContext.Default;
 
         var ean50 = new GasMix(500, 0);
-        const uint depthMm = 21000;
+        const int depthMm = 21000;
 
         // Act
         var ambientMbar = ctx.DepthToMbar(depthMm);
         var po2 = ctx.PO2Mbar(ean50, depthMm);
 
         // Assert
-        Assert.Equal(ambientMbar * 500u / 1000u, po2);
+        Assert.Equal(ambientMbar * 500 / 1000, po2);
     }
 
     [Fact]
@@ -90,14 +90,14 @@ public sealed class DiveContextTests
         var ctx = DiveContext.Default;
 
         var air = new GasMix(210, 0);
-        const uint depthMm = 10000;
+        const int depthMm = 10000;
 
         // Act
         var ambientMbar = ctx.DepthToMbar(depthMm);
         var pn2 = ctx.PN2Mbar(air, depthMm);
 
         // Assert
-        Assert.Equal(ambientMbar * air.N2Permille / 1000u, pn2);
+        Assert.Equal(ambientMbar * air.N2Permille / 1000, pn2);
     }
 
     [Fact]
@@ -107,14 +107,14 @@ public sealed class DiveContextTests
         var ctx = DiveContext.Default;
 
         var trimix = new GasMix(180, 450);
-        const uint depthMm = 30000;
+        const int depthMm = 30000;
 
         // Act
         var ambientMbar = ctx.DepthToMbar(depthMm);
         var phe = ctx.PHeMbar(trimix, depthMm);
 
         // Assert
-        Assert.Equal(ambientMbar * 450u / 1000u, phe);
+        Assert.Equal(ambientMbar * 450 / 1000, phe);
     }
 
     [Fact]
@@ -123,13 +123,13 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var mix = new GasMix(200, 210);
-        const uint roundToMm = 1000;
+        const int roundToMm = 1000;
 
         // Act
         var mod14 = ctx.GasModMmSimple(mix, 1400, roundToMm);
 
         // Assert
-        Assert.Equal(60000u, mod14);
+        Assert.Equal(60000, mod14);
     }
 
     [Fact]
@@ -138,13 +138,13 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var mix = new GasMix(500, 0);
-        const uint roundToMm = 1000;
+        const int roundToMm = 1000;
 
         // Act
         var mod = ctx.GasModMmSimple(mix, 1600, roundToMm);
 
         // Assert
-        Assert.Equal(22000u, mod);
+        Assert.Equal(22000, mod);
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var ean32 = new GasMix(320, 0);
-        const uint roundToMm = 1000;
+        const int roundToMm = 1000;
 
         // Act
         var mod14 = ctx.GasModMm(ean32, 1400, roundToMm);
@@ -161,8 +161,8 @@ public sealed class DiveContextTests
 
         // Assert
         Assert.True(mod16 >= mod14);
-        Assert.Equal(0u, mod14 % roundToMm);
-        Assert.Equal(0u, mod16 % roundToMm);
+        Assert.Equal(0, mod14 % roundToMm);
+        Assert.Equal(0, mod16 % roundToMm);
     }
 
     [Fact]
@@ -171,13 +171,13 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var o2 = new GasMix(1000, 0);
-        const uint roundToMm = 3000;
+        const int roundToMm = 3000;
 
         // Act
         var mod = ctx.GasModMm(o2, 1600, roundToMm);
 
         // Assert
-        Assert.Equal(6000u, mod);
+        Assert.Equal(6000, mod);
     }
 
     [Fact]
@@ -186,13 +186,13 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var o2 = new GasMix(1000, 0);
-        const uint roundToMm = 1000;
+        const int roundToMm = 1000;
 
         // Act
         var mod = ctx.GasModMm(o2, 1000, roundToMm);
 
         // Assert
-        Assert.Equal(0u, mod);
+        Assert.Equal(0, mod);
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public sealed class DiveContextTests
         // Arrange
         var ctx = DiveContext.Default;
         var air = new GasMix(210, 0);
-        const uint depthMm = 30000;
+        const int depthMm = 30000;
 
         // Act
         var endMm = ctx.EndMm(air, depthMm, false);
@@ -215,7 +215,7 @@ public sealed class DiveContextTests
     {
         // Arrange
         var ctx = DiveContext.Default;
-        const uint depthMm = 60000;
+        const int depthMm = 60000;
 
         var tx2135 = new GasMix(210, 350);
         var tx2150 = new GasMix(210, 500);
@@ -238,7 +238,7 @@ public sealed class DiveContextTests
         var depthMm = ctx.MbarToDepthMm(GasConstants.StandardPressureMbar);
 
         // Assert
-        Assert.Equal(0u, depthMm);
+        Assert.Equal(0, depthMm);
     }
 
     [Fact]
@@ -248,7 +248,7 @@ public sealed class DiveContextTests
         var ctx = DiveContext.Default;
         var air = new GasMix(209, 0);
 
-        const uint endMm = 30000;
+        const int endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
@@ -256,7 +256,7 @@ public sealed class DiveContextTests
 
         // Assert
         Assert.InRange((long)mndMm, 29000, 31000);
-        Assert.Equal(0u, mndMm % roundToMm);
+        Assert.Equal(0, mndMm % roundToMm);
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public sealed class DiveContextTests
         var tx2135 = new GasMix(209, 350);
         var tx2150 = new GasMix(209, 500);
 
-        const uint endMm = 30000;
+        const int endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
@@ -277,8 +277,8 @@ public sealed class DiveContextTests
 
         // Assert
         Assert.True(mnd50 > mnd35);
-        Assert.Equal(0u, mnd35 % roundToMm);
-        Assert.Equal(0u, mnd50 % roundToMm);
+        Assert.Equal(0, mnd35 % roundToMm);
+        Assert.Equal(0, mnd50 % roundToMm);
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public sealed class DiveContextTests
         var tx1835 = new GasMix(180, 350);
         var tx1880 = new GasMix(180, 800);
 
-        const uint endMm = 30000;
+        const int endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
@@ -308,14 +308,14 @@ public sealed class DiveContextTests
         var ctx = DiveContext.Default;
         var ean32 = new GasMix(320, 0);
 
-        const uint endMm = 27000;
+        const int endMm = 27000;
         const int roundToMm = 3000;
 
         // Act
         var mnd = ctx.GasMndMm(ean32, endMm, false, roundToMm);
 
         // Assert
-        Assert.Equal(0u, mnd % roundToMm);
+        Assert.Equal(0, mnd % roundToMm);
     }
 
     [Fact]
@@ -326,7 +326,7 @@ public sealed class DiveContextTests
 
         var heliox = new GasMix(200, 800);
 
-        const uint endMm = 30000;
+        const int endMm = 30000;
         const int roundToMm = 1000;
 
         // Act
@@ -334,6 +334,6 @@ public sealed class DiveContextTests
 
         // Assert
         Assert.True(mnd > 1000000);
-        Assert.Equal(0u, mnd % roundToMm);
+        Assert.Equal(0, mnd % roundToMm);
     }
 }

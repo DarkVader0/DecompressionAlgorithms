@@ -8,124 +8,124 @@ public sealed class DecoStopLevelsTests
     public void GetNextStopLevel_ShouldReturn0_WhenDepthIs0()
     {
         // Arrange
-        var depthMm = 0u;
+        var depthMm = 0;
 
         // Act
         var result = DecoStopLevels.GetNextStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(0u, result);
+        Assert.Equal(0, result);
     }
 
     [Fact]
     public void GetNextStopLevel_ShouldReturn0_WhenDepthIsAtFirstLevel()
     {
         // Arrange
-        var depthMm = 3000u;
+        var depthMm = 3000;
 
         // Act
         var result = DecoStopLevels.GetNextStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(0u, result);
+        Assert.Equal(0, result);
     }
 
     [Fact]
     public void GetNextStopLevel_ShouldReturnLowerLevel_WhenDepthIsBetweenLevels()
     {
         // Arrange
-        var depthMm = 4501u;
+        var depthMm = 4501;
 
         // Act
         var result = DecoStopLevels.GetNextStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(3000u, result);
+        Assert.Equal(3000, result);
     }
 
     [Fact]
     public void GetNextStopLevel_ShouldReturnPreviousLevel_WhenDepthIsJustAboveLevel()
     {
         // Arrange
-        var depthMm = 3001u;
+        var depthMm = 3001;
 
         // Act
         var result = DecoStopLevels.GetNextStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(3000u, result);
+        Assert.Equal(3000, result);
     }
 
     [Fact]
     public void GetNextStopLevel_ShouldReturnSecondToLastLevel_WhenDepthIsAboveMaxLevel()
     {
         // Arrange
-        var depthMm = 400000u;
+        var depthMm = 400000;
 
         // Act
         var result = DecoStopLevels.GetNextStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(380000u, result);
+        Assert.Equal(380000, result);
     }
 
     [Fact]
     public void RoundUpToStopLevel_ShouldReturn0_WhenDepthIs0()
     {
         // Arrange
-        var depthMm = 0u;
+        var depthMm = 0;
 
         // Act
         var result = DecoStopLevels.RoundUpToStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(0u, result);
+        Assert.Equal(0, result);
     }
 
     [Fact]
     public void RoundUpToStopLevel_ShouldReturnSameLevel_WhenDepthIsExactStopLevel()
     {
         // Arrange
-        var depthMm = 6000u;
+        var depthMm = 6000;
 
         // Act
         var result = DecoStopLevels.RoundUpToStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(6000u, result);
+        Assert.Equal(6000, result);
     }
 
     [Fact]
     public void RoundUpToStopLevel_ShouldReturnNextLevel_WhenDepthIsBetweenLevels()
     {
         // Arrange
-        var depthMm = 6001u;
+        var depthMm = 6001;
 
         // Act
         var result = DecoStopLevels.RoundUpToStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(9000u, result);
+        Assert.Equal(9000, result);
     }
 
     [Fact]
     public void RoundUpToStopLevel_ShouldReturnMaxLevel_WhenDepthIsAboveMaxLevel()
     {
         // Arrange
-        var depthMm = 999999u;
+        var depthMm = 999999;
 
         // Act
         var result = DecoStopLevels.RoundUpToStopLevel(depthMm);
 
         // Assert
-        Assert.Equal(380000u, result);
+        Assert.Equal(380000, result);
     }
 
     [Fact]
     public void GetStopLevelIndex_ShouldReturnIndex_WhenDepthIsStopLevel()
     {
         // Arrange
-        var depthMm = 9000u;
+        var depthMm = 9000;
 
         // Act
         var result = DecoStopLevels.GetStopLevelIndex(depthMm);
@@ -138,7 +138,7 @@ public sealed class DecoStopLevelsTests
     public void GetStopLevelIndex_ShouldReturn0_WhenDepthIs0()
     {
         // Arrange
-        var depthMm = 0u;
+        var depthMm = 0;
 
         // Act
         var result = DecoStopLevels.GetStopLevelIndex(depthMm);
@@ -151,7 +151,7 @@ public sealed class DecoStopLevelsTests
     public void GetStopLevelIndex_ShouldReturnMinus1_WhenDepthIsNotStopLevel()
     {
         // Arrange
-        var depthMm = 1u;
+        var depthMm = 1;
 
         // Act
         var result = DecoStopLevels.GetStopLevelIndex(depthMm);
@@ -164,7 +164,7 @@ public sealed class DecoStopLevelsTests
     public void GetStopLevelIndex_ShouldReturnLastIndex_WhenDepthIsMaxStopLevel()
     {
         // Arrange
-        var depthMm = 380000u;
+        var depthMm = 380000;
 
         // Act
         var result = DecoStopLevels.GetStopLevelIndex(depthMm);

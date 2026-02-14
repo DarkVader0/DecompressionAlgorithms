@@ -18,25 +18,25 @@ public sealed class GasConsumptionTests
     public void CalculateAtDepth_ShouldReturnZeroConsumption_WhenDurationIsZero()
     {
         // Arrange
-        var depthMm = 20000u;
-        var durationSeconds = 0u;
-        var sacMlMin = 12000u;
+        var depthMm = 20000;
+        var durationSeconds = 0;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
             GasConsumption.CalculateAtDepth(depthMm, durationSeconds, sacMlMin, _seaWaterDiveContext);
 
         // Assert
-        Assert.Equal(0u, gasUsed);
+        Assert.Equal(0, gasUsed);
     }
 
     [Fact]
     public void CalculateAtDepth_ShouldReturnSac_WhenOnSurfaceForOneMinute()
     {
         // Arrange
-        var depthMm = 0u;
-        var durationSeconds = 60u;
-        var sacMlMin = 12000u;
+        var depthMm = 0;
+        var durationSeconds = 60;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -50,9 +50,9 @@ public sealed class GasConsumptionTests
     public void CalculateAtDepth_ShouldReturnTwiceTheSac_WhenAtTenMetersForOneMinute()
     {
         // Arrange
-        var depthMm = 10000u;
-        var durationSeconds = 60u;
-        var sacMlMin = 12000u;
+        var depthMm = 10000;
+        var durationSeconds = 60;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -66,9 +66,9 @@ public sealed class GasConsumptionTests
     public void CalculateAtDepth_ShouldBeThreeTimesTheSac_WhenAtTwentyMetersForOneMinute()
     {
         // Arrange
-        var depthMm = 20000u;
-        var durationSeconds = 60u;
-        var sacMlMin = 12000u;
+        var depthMm = 20000;
+        var durationSeconds = 60;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -82,9 +82,9 @@ public sealed class GasConsumptionTests
     public void CalculateAtDepth_ShouldBeTwoTimesTheSac_WhenAtSurfaceForTwoMinutes()
     {
         // Arrange
-        var depthMm = 0u;
-        var durationSeconds = 120u;
-        var sacMlMin = 15000u;
+        var depthMm = 0;
+        var durationSeconds = 120;
+        var sacMlMin = 15000;
 
         // Act
         var gasUsed =
@@ -98,9 +98,9 @@ public sealed class GasConsumptionTests
     public void CalculateAtDepth_ShouldBeFourTimesTheSac_WhenAtTenMetersForTwoMinutes()
     {
         // Arrange
-        var depthMm = 10000u;
-        var durationSeconds = 120u;
-        var sacMlMin = 15000u;
+        var depthMm = 10000;
+        var durationSeconds = 120;
+        var sacMlMin = 15000;
 
         // Act
         var gasUsed =
@@ -114,10 +114,10 @@ public sealed class GasConsumptionTests
     public void CalculateForTransition_ShouldReturnZeroConsumption_WhenDurationIsZero()
     {
         // Arrange
-        var startDepthMm = 0u;
-        var endDepthMm = 20000u;
-        var durationSeconds = 0u;
-        var sacMlMin = 12000u;
+        var startDepthMm = 0;
+        var endDepthMm = 20000;
+        var durationSeconds = 0;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -125,17 +125,17 @@ public sealed class GasConsumptionTests
                 _seaWaterDiveContext);
 
         // Assert
-        Assert.Equal(0u, gasUsed);
+        Assert.Equal(0, gasUsed);
     }
 
     [Fact]
     public void CalculateForTransition_ShouldReturnSac_WhenOnSurfaceAndTransitionIsZero()
     {
         // Arrange
-        var startDepthMm = 0u;
-        var endDepthMm = 0u;
-        var durationSeconds = 60u;
-        var sacMlMin = 12000u;
+        var startDepthMm = 0;
+        var endDepthMm = 0;
+        var durationSeconds = 60;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -150,10 +150,10 @@ public sealed class GasConsumptionTests
     public void CalculateForTransition_ShouldBeTwiceTheSac_WhenTransitioningBetweenSurfaceAndTwentyMetersOverOneMinute()
     {
         // Arrange
-        var startDepthMm = 0u;
-        var endDepthMm = 20000u;
-        var durationSeconds = 60u;
-        var sacMlMin = 12000u;
+        var startDepthMm = 0;
+        var endDepthMm = 20000;
+        var durationSeconds = 60;
+        var sacMlMin = 12000;
 
         // Act
         var gasUsed =
@@ -168,79 +168,79 @@ public sealed class GasConsumptionTests
     public void TransitionDuration_ShouldBeZero_WhenStartAndEndDepthAreTheSame()
     {
         // Arrange
-        var startDepthMm = 15000u;
-        var endDepthMm = 15000u;
-        var rateMmMin = 10000u;
+        var startDepthMm = 15000;
+        var endDepthMm = 15000;
+        var rateMmMin = 10000;
 
         // Act
         var durationSeconds =
             GasConsumption.TransitionDuration(startDepthMm, endDepthMm, rateMmMin);
 
         // Assert
-        Assert.Equal(0u, durationSeconds);
+        Assert.Equal(0, durationSeconds);
     }
 
     [Fact]
     public void TransitionDuration_ShouldBeSixtySeconds_WhenChangingDepthByTenMetersAtTenMetersPerMinute()
     {
         // Arrange
-        var startDepthMm = 0u;
-        var endDepthMm = 10000u;
-        var rateMmMin = 10000u;
+        var startDepthMm = 0;
+        var endDepthMm = 10000;
+        var rateMmMin = 10000;
 
         // Act
         var durationSeconds =
             GasConsumption.TransitionDuration(startDepthMm, endDepthMm, rateMmMin);
 
         // Assert
-        Assert.Equal(60u, durationSeconds);
+        Assert.Equal(60, durationSeconds);
     }
 
     [Fact]
     public void TransitionDuration_ShouldBeThirtySeconds_WhenChangingDepthByFiveMetersAtTenMetersPerMinute()
     {
         // Arrange
-        var startDepthMm = 10000u;
-        var endDepthMm = 5000u;
-        var rateMmMin = 10000u;
+        var startDepthMm = 10000;
+        var endDepthMm = 5000;
+        var rateMmMin = 10000;
 
         // Act
         var durationSeconds =
             GasConsumption.TransitionDuration(startDepthMm, endDepthMm, rateMmMin);
 
         // Assert
-        Assert.Equal(30u, durationSeconds);
+        Assert.Equal(30, durationSeconds);
     }
 
     [Fact]
     public void RemainingPressureMbar_ShouldReturnZero_WhenGasUsedExceedsTotalGas()
     {
         // Arrange
-        var startPressureMbar = 200000u;
-        var gasUsedMl = 5000000u;
-        var cylinderVolumeMl = 10000u;
+        var startPressureMbar = 200000;
+        var gasUsedMl = 5000000;
+        var cylinderVolumeMl = 10000;
 
         // Act
         var remainingPressureMbar =
             GasConsumption.RemainingPressureMbar(startPressureMbar, gasUsedMl, cylinderVolumeMl);
 
         // Assert
-        Assert.Equal(0u, remainingPressureMbar);
+        Assert.Equal(0, remainingPressureMbar);
     }
 
     [Fact]
     public void RemainingPressureMbar_ShouldReturn100Bar_When100BarIsUsedOutOf200BarCylinder()
     {
         // Arrange
-        var startPressureMbar = 200000u;
-        var gasUsedMl = 1000000u;
-        var cylinderVolumeMl = 10000u;
+        var startPressureMbar = 200000;
+        var gasUsedMl = 1000000;
+        var cylinderVolumeMl = 10000;
 
         // Act
         var remainingPressureMbar =
             GasConsumption.RemainingPressureMbar(startPressureMbar, gasUsedMl, cylinderVolumeMl);
 
         // Assert
-        Assert.Equal(100000u, remainingPressureMbar);
+        Assert.Equal(100000, remainingPressureMbar);
     }
 }

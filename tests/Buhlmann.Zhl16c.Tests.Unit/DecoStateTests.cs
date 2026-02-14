@@ -73,7 +73,7 @@ public sealed class DecoStateTests
         state.Clear(StandardPressureBar);
 
         // Assert
-        Assert.Equal(0, state.LeadingTissueIndex);
+        Assert.Equal(-1, state.LeadingTissueIndex);
     }
 
     [Theory]
@@ -381,7 +381,7 @@ public sealed class DecoStateTests
         var ceilingMm = state.CeilingMm(0.8, context);
 
         // Assert
-        Assert.Equal(0u, ceilingMm);
+        Assert.Equal(0, ceilingMm);
     }
 
     [Fact]
@@ -417,7 +417,7 @@ public sealed class DecoStateTests
         var ceilingMm = state.CeilingMm(0.75, context);
 
         // Assert - Should be a reasonable depth value
-        Assert.InRange(ceilingMm, 0u, 100000u); // 0-100m seems reasonable
+        Assert.InRange(ceilingMm, 0, 100000); // 0-100m seems reasonable
     }
 
     #endregion
@@ -435,7 +435,7 @@ public sealed class DecoStateTests
         var ceilingMm = state.CeilingMm(0.30, 0.70, DefaultContext);
 
         // Assert
-        Assert.Equal(0u, ceilingMm);
+        Assert.Equal(0, ceilingMm);
     }
 
     [Fact]
@@ -574,24 +574,6 @@ public sealed class DecoStateTests
     #region Single GF CeilingMm GfLowPressureThisDive Update Tests
 
     [Fact]
-    public void CeilingMm_SingleGf_ShouldUpdateGfLowPressureThisDive_WhenCeilingIsDeeper()
-    {
-        // Arrange
-        var state = new DecoState();
-        state.Clear(StandardPressureBar);
-        var gasMix = new GasMix(210, 0);
-        state.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
-
-        var initialGfLowPressure = state.GfLowPressureThisDive;
-
-        // Act
-        state.CeilingMm(0.70, DefaultContext);
-
-        // Assert
-        Assert.True(state.GfLowPressureThisDive > initialGfLowPressure);
-    }
-
-    [Fact]
     public void CeilingMm_SingleGf_ShouldNotDecreaseGfLowPressureThisDive_WhenCeilingIsShallower()
     {
         // Arrange
@@ -637,27 +619,6 @@ public sealed class DecoStateTests
 
         // Assert
         Assert.Equal(ceilingSingleGf, ceilingDualGf);
-    }
-
-    [Fact]
-    public void CeilingMm_BothOverloads_ShouldUpdateGfLowPressureThisDive_Consistently()
-    {
-        // Arrange
-        var state1 = new DecoState();
-        var state2 = new DecoState();
-        state1.Clear(StandardPressureBar);
-        state2.Clear(StandardPressureBar);
-
-        var gasMix = new GasMix(210, 0);
-        state1.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
-        state2.AddSegment(6.0, gasMix, 1800, DiveMode.OC, 0);
-
-        // Act
-        state1.CeilingMm(0.30, DefaultContext);
-        state2.CeilingMm(0.30, 0.70, DefaultContext);
-
-        // Assert - Both should have updated GfLowPressureThisDive based on GF 0.30 ceiling
-        Assert.Equal(state1.GfLowPressureThisDive, state2.GfLowPressureThisDive);
     }
 
     #endregion
@@ -863,7 +824,7 @@ public sealed class DecoStateTests
         var state = DecoState.CreateAtSurface(StandardPressureBar);
 
         // Assert
-        Assert.Equal(0, state.LeadingTissueIndex);
+        Assert.Equal(-1, state.LeadingTissueIndex);
     }
 
     #endregion
@@ -897,15 +858,12 @@ public sealed class DecoStateTests
         var decoMix = new GasMix(500, 0);
 
         // Act
-        // Bottom time at 60m (7 bar)
         state.AddSegment(7.0, bottomMix, 1200, DiveMode.OC, 0); // 20 minutes
-
-        // Ascent to 21m (3.1 bar) on deco gas
         state.AddSegment(3.1, decoMix, 600, DiveMode.OC, 0);
 
         var ceiling = state.CeilingBar(0.7);
 
-        // Assert - Should definitely have a ceiling
+        // Assert
         Assert.True(ceiling > StandardPressureBar);
     }
 

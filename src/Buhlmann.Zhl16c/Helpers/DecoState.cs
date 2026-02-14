@@ -27,7 +27,7 @@ public unsafe struct DecoState
         }
 
         GfLowPressureThisDive = surfacePressureBar + 1.0;
-        LeadingTissueIndex = 0;
+        LeadingTissueIndex = -1;
         SatMult = 1.0;
         DesatMult = 1.0;
         IcdWarning = false;
@@ -132,7 +132,7 @@ public unsafe struct DecoState
 
             var ceiling = (b * pInert - gf * a * b) / ((1.0 - b) * gf + b);
 
-            if (ceiling <= maxCeiling)
+            if (ceiling < maxCeiling)
             {
                 continue;
             }
@@ -146,16 +146,11 @@ public unsafe struct DecoState
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint CeilingMm(double gf, DiveContext context)
+    public int CeilingMm(double gf, DiveContext context)
     {
         var ceilingBar = CeilingBar(gf);
 
-        if (ceilingBar > GfLowPressureThisDive)
-        {
-            GfLowPressureThisDive = ceilingBar;
-        }
-
-        var ceilingMbar = (uint)(ceilingBar * 1000);
+        var ceilingMbar = (int)(ceilingBar * 1000);
 
         if (ceilingMbar <= context.SurfacePressureMbar)
         {
@@ -166,7 +161,7 @@ public unsafe struct DecoState
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint CeilingMm(double gfLow,
+    public int CeilingMm(double gfLow,
         double gfHigh,
         DiveContext context)
     {
@@ -243,7 +238,7 @@ public unsafe struct DecoState
                 tolerated = maxCeiling;
             }
 
-            if (tolerated > maxCeiling)
+            if (tolerated >= maxCeiling)
             {
                 maxCeiling = tolerated;
                 leadingIdx = i;
@@ -257,7 +252,7 @@ public unsafe struct DecoState
             return 0;
         }
 
-        return context.MbarToDepthMm((uint)(maxCeiling * 1000));
+        return context.MbarToDepthMm((int)(maxCeiling * 1000));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

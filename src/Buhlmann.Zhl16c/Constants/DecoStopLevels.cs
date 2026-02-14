@@ -2,9 +2,9 @@
 
 public static class DecoStopLevels
 {
-    public const uint StepMm = 3000;
+    public const int StepMm = 3000;
 
-    public static readonly uint[] Mm =
+    public static readonly int[] Mm =
     {
         0, 3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000,
         30000, 33000, 36000, 39000, 42000, 45000, 48000, 51000, 54000, 57000,
@@ -14,7 +14,7 @@ public static class DecoStopLevels
         320000, 340000, 360000, 380000
     };
 
-    public static uint GetNextStopLevel(uint currentDepthMm)
+    public static int GetNextStopLevel(int currentDepthMm)
     {
         for (var i = Mm.Length - 1; i >= 0; i--)
         {
@@ -27,7 +27,7 @@ public static class DecoStopLevels
         return 0;
     }
 
-    public static uint RoundUpToStopLevel(uint depthMm)
+    public static int RoundUpToStopLevel(int depthMm)
     {
         foreach (var level in Mm)
         {
@@ -40,7 +40,7 @@ public static class DecoStopLevels
         return Mm[^1];
     }
 
-    public static int GetStopLevelIndex(uint depthMm)
+    public static int GetStopLevelIndex(int depthMm)
     {
         for (var i = 0; i < Mm.Length; i++)
         {

@@ -21,7 +21,7 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 60000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(0u, count);
+        Assert.Equal(0, count);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 60000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(0u, count);
+        Assert.Equal(0, count);
     }
 
     [Fact]
@@ -57,9 +57,9 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 60000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(1u, count);
+        Assert.Equal(1, count);
         Assert.Equal(1, gasChanges[0].CylinderIndex);
-        Assert.Equal(21000u, gasChanges[0].DepthMm);
+        Assert.Equal(21000, gasChanges[0].DepthMm);
     }
 
     [Fact]
@@ -78,10 +78,10 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 60000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(2u, count);
-        Assert.Equal(21000u, gasChanges[0].DepthMm);
+        Assert.Equal(2, count);
+        Assert.Equal(21000, gasChanges[0].DepthMm);
         Assert.Equal(2, gasChanges[0].CylinderIndex);
-        Assert.Equal(6000u, gasChanges[1].DepthMm);
+        Assert.Equal(6000, gasChanges[1].DepthMm);
         Assert.Equal(0, gasChanges[1].CylinderIndex);
     }
 
@@ -100,7 +100,7 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 20000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(0u, count);
+        Assert.Equal(0, count);
     }
 
     [Fact]
@@ -120,10 +120,10 @@ public sealed class GasSelectorTests
         var count = GasSelector.BuildGasChangeList(cylinders, 100000, 1600, DefaultContext, gasChanges);
 
         // Assert
-        Assert.Equal(3u, count);
+        Assert.Equal(3, count);
         Assert.True(gasChanges[0].DepthMm > gasChanges[1].DepthMm);
         Assert.True(gasChanges[1].DepthMm > gasChanges[2].DepthMm);
-        Assert.Equal(6000u, gasChanges[2].DepthMm);
+        Assert.Equal(6000, gasChanges[2].DepthMm);
     }
 
     #endregion

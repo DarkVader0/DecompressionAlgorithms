@@ -8,16 +8,16 @@ public sealed class OxygenToxicityTests
     [Fact]
     public void CnsRatePerSecond_ShouldReturnZero_WhenPo2Is500OrLess()
     {
-        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(209u));
-        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(500u));
-        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(0u));
+        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(209));
+        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(500));
+        Assert.Equal(0.0, OxygenToxicity.CnsRatePerSecond(0));
     }
 
     [Fact]
     public void CnsRatePerSecond_ShouldUseLowerCurve_WhenPo2IsAtOrBelow1500()
     {
         // Arrange
-        var po2Mbar = 1500u;
+        var po2Mbar = 1500;
         var expected = Math.Exp(-11.7853 + 0.00193873 * po2Mbar);
 
         // Act
@@ -31,7 +31,7 @@ public sealed class OxygenToxicityTests
     public void CnsRatePerSecond_ShouldUseUpperCurve_WhenPo2IsAbove1500()
     {
         // Arrange
-        var po2Mbar = 1600u;
+        var po2Mbar = 1600;
         var expected = Math.Exp(-23.6349 + 0.00980829 * po2Mbar);
 
         // Act
@@ -45,7 +45,7 @@ public sealed class OxygenToxicityTests
     public void CnsRatePerSecond_ShouldReturnZero_WhenOnSurface()
     {
         // Arrange
-        var po2Mbar = 209u;
+        var po2Mbar = 209;
 
         // Act
         var result = OxygenToxicity.CnsRatePerSecond(po2Mbar);
@@ -58,8 +58,8 @@ public sealed class OxygenToxicityTests
     public void CalculateCns_ShouldBeAboutTwentySevenPercent_WhenAt665mbarFor167Minutes()
     {
         // Arrange
-        var po2Mbar = 665u;
-        var durationSec = 167u * 60u;
+        var po2Mbar = 665;
+        var durationSec = 167 * 60;
 
         // Act
         var result = OxygenToxicity.CalculateCns(po2Mbar, durationSec);
@@ -78,13 +78,13 @@ public sealed class OxygenToxicityTests
         var ean50 = new GasMix(500, 0);
 
         // Depths (mm)
-        const uint d0 = 0u;
-        const uint d6 = 6000u;
-        const uint d9 = 9000u;
-        const uint d12 = 12000u;
-        const uint d15 = 15000u;
-        const uint d21 = 21000u;
-        const uint d48 = 48000u;
+        const int d0 = 0;
+        const int d6 = 6000;
+        const int d9 = 9000;
+        const int d12 = 12000;
+        const int d15 = 15000;
+        const int d21 = 21000;
+        const int d48 = 48000;
 
         var po20Ean25 = ctx.PO2Mbar(ean25, d0);
         var po248Ean25 = ctx.PO2Mbar(ean25, d48);
@@ -97,15 +97,15 @@ public sealed class OxygenToxicityTests
         var po26Ean50 = ctx.PO2Mbar(ean50, d6);
         var po20Ean50 = ctx.PO2Mbar(ean50, d0);
 
-        var t10 = 10u * 60u;
-        var t30 = 30u * 60u;
-        var t6 = 6u * 60u;
-        var t3 = 3u * 60u;
-        var t1 = 1u * 60u;
-        var t2 = 2u * 60u;
-        var t4 = 4u * 60u;
-        var t7 = 7u * 60u;
-        var t39 = 39u * 60u;
+        var t10 = 10 * 60;
+        var t30 = 30 * 60;
+        var t6 = 6 * 60;
+        var t3 = 3 * 60;
+        var t1 = 1 * 60;
+        var t2 = 2 * 60;
+        var t4 = 4 * 60;
+        var t7 = 7 * 60;
+        var t39 = 39 * 60;
 
         // Act
         // Plan:
@@ -141,8 +141,8 @@ public sealed class OxygenToxicityTests
     public void CalculateCns_ShouldBeAboutNinetySixPercent_WhenAt1600mbarFor45Minutes()
     {
         // Arrange
-        var po2Mbar = 1600u;
-        var durationSec = 45u * 60u;
+        var po2Mbar = 1600;
+        var durationSec = 45 * 60;
 
         // Act
         var result = OxygenToxicity.CalculateCns(po2Mbar, durationSec);
@@ -154,9 +154,9 @@ public sealed class OxygenToxicityTests
     [Fact]
     public void CalculateOtu_ShouldReturnZero_WhenPo2Is500OrLess()
     {
-        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(209u, 60u));
-        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(500u, 120u));
-        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(0u, 300u));
+        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(209, 60));
+        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(500, 120));
+        Assert.Equal(0.0, OxygenToxicity.CalculateOtu(0, 300));
     }
 
     [Fact]
@@ -168,13 +168,13 @@ public sealed class OxygenToxicityTests
         var ean25 = new GasMix(250, 0);
         var ean50 = new GasMix(500, 0);
 
-        const uint d0 = 0u;
-        const uint d6 = 6000u;
-        const uint d9 = 9000u;
-        const uint d12 = 12000u;
-        const uint d15 = 15000u;
-        const uint d21 = 21000u;
-        const uint d48 = 48000u;
+        const int d0 = 0;
+        const int d6 = 6000;
+        const int d9 = 9000;
+        const int d12 = 12000;
+        const int d15 = 15000;
+        const int d21 = 21000;
+        const int d48 = 48000;
 
         var po20Ean25 = ctx.PO2Mbar(ean25, d0);
         var po248Ean25 = ctx.PO2Mbar(ean25, d48);
@@ -187,15 +187,15 @@ public sealed class OxygenToxicityTests
         var po26Ean50 = ctx.PO2Mbar(ean50, d6);
         var po20Ean50 = ctx.PO2Mbar(ean50, d0);
 
-        var t10 = 10u * 60u;
-        var t30 = 30u * 60u;
-        var t6 = 6u * 60u;
-        var t3 = 3u * 60u;
-        var t1 = 1u * 60u;
-        var t2 = 2u * 60u;
-        var t4 = 4u * 60u;
-        var t7 = 7u * 60u;
-        var t39 = 39u * 60u;
+        var t10 = 10 * 60;
+        var t30 = 30 * 60;
+        var t6 = 6 * 60;
+        var t3 = 3 * 60;
+        var t1 = 1 * 60;
+        var t2 = 2 * 60;
+        var t4 = 4 * 60;
+        var t7 = 7 * 60;
+        var t39 = 39 * 60;
 
         // Act
         // Plan:

@@ -24,25 +24,25 @@ public struct DiveContext
     private readonly double SpecificWeight => Salinity * 0.981 / 100000.0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly uint DepthToMbar(uint depthMm)
+    public readonly int DepthToMbar(int depthMm)
     {
-        return (uint)(SurfacePressureMbar + SpecificWeight * depthMm);
+        return (int)(SurfacePressureMbar + SpecificWeight * depthMm);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly double DepthToBar(uint depthMm)
+    public readonly double DepthToBar(int depthMm)
     {
         return DepthToMbar(depthMm) / 1000.0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint RelMbarToDepthMm(uint mbar)
+    public int RelMbarToDepthMm(int mbar)
     {
-        return (uint)(mbar / SpecificWeight);
+        return (int)(mbar / SpecificWeight);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint MbarToDepthMm(uint mbar)
+    public int MbarToDepthMm(int mbar)
     {
         if (mbar <= SurfacePressureMbar)
         {
@@ -53,21 +53,21 @@ public struct DiveContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint GasModMm(GasMix mix,
-        uint po2LimitMbar,
-        uint roundToMm)
+    public int GasModMm(GasMix mix,
+        int po2LimitMbar,
+        int roundToMm)
     {
         return GasModMmSimple(mix, po2LimitMbar, roundToMm);
         // var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
         // var depthMm = (double)MbarToDepthMm(maxPressureMbar);
         //
-        // return (uint)(depthMm / roundToMm + 0.1) * roundToMm;
+        // return (int)(depthMm / roundToMm + 0.1) * roundToMm;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint GasModMmSimple(GasMix mix,
-        uint po2LimitMbar,
-        uint roundToMm)
+    public int GasModMmSimple(GasMix mix,
+        int po2LimitMbar,
+        int roundToMm)
     {
         var maxPressureMbar = po2LimitMbar * 1000 / mix.O2Permille;
         var depthMm = (double)(maxPressureMbar - 1000) * 10;
@@ -79,21 +79,21 @@ public struct DiveContext
                 ? Math.Round(steps, MidpointRounding.AwayFromZero)
                 : Math.Floor(steps);
 
-        return (uint)(roundedSteps * roundToMm);
+        return (int)(roundedSteps * roundToMm);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint GasMndMm(GasMix mix,
-        uint endMm,
+    public int GasMndMm(GasMix mix,
+        int endMm,
         bool o2IsNarcotic,
-        uint roundToMm)
+        int roundToMm)
     {
         var pNarcoticMbar = DepthToMbar(endMm);
 
-        uint maxAmbientMbar = 1000000;
+        int maxAmbientMbar = 1000000;
         if (o2IsNarcotic)
         {
-            maxAmbientMbar = (uint)(pNarcoticMbar / 1.0 - mix.HePermille / 1000.0);
+            maxAmbientMbar = (int)(pNarcoticMbar / 1.0 - mix.HePermille / 1000.0);
         }
         else
         {
@@ -104,30 +104,30 @@ public struct DiveContext
         }
 
         var depthMm = (double)MbarToDepthMm(maxAmbientMbar);
-        return (uint)(depthMm / roundToMm) * roundToMm;
+        return (int)(depthMm / roundToMm) * roundToMm;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint PO2Mbar(GasMix mix, uint depthMm)
+    public int PO2Mbar(GasMix mix, int depthMm)
     {
         return DepthToMbar(depthMm) * mix.O2Permille / 1000;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint PN2Mbar(GasMix mix, uint depthMm)
+    public int PN2Mbar(GasMix mix, int depthMm)
     {
         return DepthToMbar(depthMm) * mix.N2Permille / 1000;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint PHeMbar(GasMix mix, uint depthMm)
+    public int PHeMbar(GasMix mix, int depthMm)
     {
         return DepthToMbar(depthMm) * mix.HePermille / 1000;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint EndMm(GasMix mix,
-        uint depthMm,
+    public int EndMm(GasMix mix,
+        int depthMm,
         bool o2IsNarcotic)
     {
         var narcoticPermille = o2IsNarcotic

@@ -89,5 +89,10 @@ public sealed class DecoPlannerTests
         
         // Assert
         var steps = plan.SegmentCount;
+
+        for (var i = 0; i < steps; i++)
+        {
+            Console.WriteLine(plan.Segments[i].RuntimeStartSec + " - " + plan.Segments[i].RuntimeEndSec);
+        }
     }
 }

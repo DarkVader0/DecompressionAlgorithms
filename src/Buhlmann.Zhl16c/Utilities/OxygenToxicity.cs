@@ -5,7 +5,7 @@ namespace Buhlmann.Zhl16c.Utilities;
 public static class OxygenToxicity
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double CnsRatePerSecond(uint po2Mbar)
+    public static double CnsRatePerSecond(int po2Mbar)
     {
         if (po2Mbar <= 500)
         {
@@ -18,22 +18,22 @@ public static class OxygenToxicity
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double CalculateCns(uint po2Mbar, uint durationSec)
+    public static double CalculateCns(int po2Mbar, int durationSec)
     {
         return CnsRatePerSecond(po2Mbar) * durationSec * 100.0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double CalculateCnsTransition(uint startPo2Mbar,
-        uint endPo2Mbar,
-        uint durationSec)
+    public static double CalculateCnsTransition(int startPo2Mbar,
+        int endPo2Mbar,
+        int durationSec)
     {
         var avgPo2Mbar = (startPo2Mbar + endPo2Mbar) / 2;
         return CalculateCns(avgPo2Mbar, durationSec);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double CalculateOtu(uint po2Mbar, uint durationSec)
+    public static double CalculateOtu(int po2Mbar, int durationSec)
     {
         if (po2Mbar <= 500)
         {
@@ -47,9 +47,9 @@ public static class OxygenToxicity
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double CalculateOtuTransition(uint startPo2Mbar,
-        uint endPo2Mbar,
-        uint durationSec)
+    public static double CalculateOtuTransition(int startPo2Mbar,
+        int endPo2Mbar,
+        int durationSec)
     {
         var avgPo2Mbar = (startPo2Mbar + endPo2Mbar) / 2;
         return CalculateOtu(avgPo2Mbar, durationSec);
