@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using Buhlmann.Zhl16c.Enums;
+using Buhlmann.Zhl16c.Input;
 
 namespace Buhlmann.Zhl16c.Output;
 
@@ -22,42 +23,53 @@ public struct PlanResult
 
     public override string ToString()
     {
-        var stringBuilder = new StringBuilder();
-        var totalRuntimeSec = 0;
-        stringBuilder.AppendLine($"{"depth",8}  {"duration",10}  {"runtime",10}  {"gas",12}");
+        var sb = new StringBuilder();
+        sb.AppendLine($"{"",3}{"depth",5}  {"duration",8}  {"runtime",8}");
 
-        for (var i = 0; i < SegmentCount; i++)
+        var i = 0;
+        while (i < SegmentCount)
         {
             ref var seg = ref Segments[i];
 
-            var startDepthM = seg.DepthStartMm / 1000;
-            var endDepthM = seg.DepthEndMm / 1000;
-            var durationSec = seg.RuntimeEndSec - seg.RuntimeStartSec;
-            totalRuntimeSec = seg.RuntimeEndSec;
-
-            var durationMin = (durationSec + 30) / 60;
-            var runtimeMin = (totalRuntimeSec + 30) / 60;
-
-            if (startDepthM != endDepthM)
+            if (seg.DepthStartMm > seg.DepthEndMm)
             {
-                if (startDepthM == 0 && endDepthM > 0)
+                var ascentStartSec = seg.RuntimeStartSec;
+                var ascentEndDepthMm = seg.DepthEndMm;
+                var ascentEndSec = seg.RuntimeEndSec;
+
+                while (i + 1 < SegmentCount &&
+                       Segments[i + 1].DepthStartMm > Segments[i + 1].DepthEndMm)
                 {
-                    stringBuilder.AppendLine($"{endDepthM + "m",8}  {durationMin + "min",10}  {runtimeMin + "min",10}  EAN25");
-                }
-                else if (endDepthM == 0)
-                {
-                    stringBuilder.AppendLine($"{"0m",8}  {durationMin + "min",10}  {runtimeMin + "min",10}  EAN25");
+                    i++;
+                    ascentEndDepthMm = Segments[i].DepthEndMm;
+                    ascentEndSec = Segments[i].RuntimeEndSec;
                 }
 
-                continue;
+                var durationMin = (ascentEndSec - ascentStartSec + 30) / 60;
+                var runtimeMin = (ascentEndSec + 30) / 60;
+                var depthM = ascentEndDepthMm / 1000;
+
+                sb.AppendLine($" ➚ {depthM + "m",5}  {durationMin + "min",8}  {runtimeMin + "min",8}");
+            }
+            else
+            {
+                var icon = seg.DepthStartMm < seg.DepthEndMm ? "➘" :
+                    seg.SegmentType == SegmentType.Bottom ? "➙" : "-";
+
+                var durationMin = (seg.RuntimeEndSec - seg.RuntimeStartSec + 30) / 60;
+                var runtimeMin = (seg.RuntimeEndSec + 30) / 60;
+                var depthM = seg.DepthEndMm / 1000;
+
+                sb.AppendLine($" {icon} {depthM + "m",5}  {durationMin + "min",8}  {runtimeMin + "min",8}");
             }
 
-            stringBuilder.AppendLine($"{endDepthM + "m",8}  {durationMin + "min",10}  {runtimeMin + "min",10}  EAN25");
+            i++;
         }
 
-        stringBuilder.AppendLine();
-        stringBuilder.AppendLine($"Runtime: {(totalRuntimeSec + 30) / 60}min ({totalRuntimeSec}s)");
-        
-        return stringBuilder.ToString();
+        sb.AppendLine();
+        sb.AppendLine($"Runtime: {(TimeTotalSec + 30) / 60}min ({TimeTotalSec}s)");
+        sb.AppendLine($"Max depth: {MaxDepthMm / 1000}m");
+
+        return sb.ToString();
     }
 }
