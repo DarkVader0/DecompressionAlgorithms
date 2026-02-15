@@ -18,6 +18,6 @@ public struct PlanSegment
 
     public override string ToString()
     {
-        return $"{DepthStartMm / 1000} -> {DepthEndMm / 1000} | {Math.Round((RuntimeEndSec - RuntimeStartSec) / 60.0, 0)} | {RuntimeEndSec / 60}";
+        return $"{DepthStartMm / 1000} -> {DepthEndMm / 1000} | {RuntimeEndSec - RuntimeStartSec} | {RuntimeEndSec / 60}";
     }
 }

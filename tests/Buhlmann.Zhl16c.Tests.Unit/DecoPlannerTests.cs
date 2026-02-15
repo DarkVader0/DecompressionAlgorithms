@@ -84,16 +84,6 @@ public sealed class DecoPlannerTests
 
 
         // Assert
-        var steps = plan.SegmentCount;
-
-        for (var i = 0; i < steps; i++)
-        {
-            var segment = plan.Segments[i];
-            if ((segment.RuntimeEndSec - segment.RuntimeStartSec) / 60 == 0)
-            {
-                continue;
-            }
-            Console.WriteLine(plan.Segments[i].ToString());
-        }
+        Console.WriteLine(plan.ToString());
     }
 }

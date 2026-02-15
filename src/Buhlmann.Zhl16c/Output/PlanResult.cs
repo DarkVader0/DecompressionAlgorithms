@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 using Buhlmann.Zhl16c.Enums;
 
 namespace Buhlmann.Zhl16c.Output;
@@ -18,4 +19,17 @@ public struct PlanResult
     public ushort CnsPercent;
     public ushort OtuTotal;
     public PlanError Error;
+
+    public override string ToString()
+    {
+        var stringBuilder = new StringBuilder();
+        var steps = SegmentCount;
+
+        for (var i = 0; i < steps; i++)
+        {
+            stringBuilder.AppendLine(Segments[i].ToString());
+        }
+
+        return stringBuilder.ToString();
+    }
 }
