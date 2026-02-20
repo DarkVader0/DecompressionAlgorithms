@@ -255,7 +255,11 @@ public static class DecoPlanner
                         ds.AddSegment(
                             context.DepthToBar(depthMm), currentMix,
                             switchDur, diveMode, setpointMbar);
+
+                        result.Segments[segmentCount - 1].RuntimeEndSec = clock + switchDur;
+                        
                         clock += switchDur;
+                        ascentStartClock = clock;
                     }
                 }
 

@@ -133,7 +133,7 @@ void PlanDeco45()
         {
             LastStopAt6m = true,
             SafetyStop = false,
-            MinSwitchDurationSec = 4 * 60,
+            MinSwitchDurationSec = 3 * 60,
             ProblemSolvingTimeMin = 4,
             SwitchAtRequiredStop = false
         },
