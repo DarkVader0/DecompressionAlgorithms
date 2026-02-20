@@ -54,7 +54,7 @@ public struct PlanResult
             else
             {
                 var icon = seg.DepthStartMm < seg.DepthEndMm ? "➘" :
-                    seg.SegmentType == SegmentType.Bottom ? "➙" : seg.SegmentType ==  SegmentType.GasSwitch ? "⇌" : "-";
+                    seg.SegmentType == SegmentType.Bottom ? "➙" : seg.SegmentType ==  SegmentType.GasSwitch ? "⇄" : "-";
 
                 var durationMin = (seg.RuntimeEndSec - seg.RuntimeStartSec + 30) / 60;
                 var runtimeMin = (seg.RuntimeEndSec + 30) / 60;
