@@ -247,12 +247,14 @@ public unsafe struct DecoState
 
         LeadingTissueIndex = leadingIdx;
 
-        if (maxCeiling * 1000 <= context.SurfacePressureMbar)
+        var ceilingMbar = (int)Math.Round(maxCeiling * 1000);
+
+        if (ceilingMbar <= context.SurfacePressureMbar)
         {
             return 0;
         }
 
-        return context.MbarToDepthMm((int)(maxCeiling * 1000));
+        return context.MbarToDepthMm(ceilingMbar);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
