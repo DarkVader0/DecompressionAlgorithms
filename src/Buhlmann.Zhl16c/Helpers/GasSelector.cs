@@ -25,7 +25,7 @@ public static class GasSelector
             }
 
             var mix = new GasMix(cyl.O2Permille, cyl.HePermille);
-            var modMm = context.GasModMm(mix, decoPo2Mbar, 3000);
+            var modMm = context.GasModMm(mix, decoPo2Mbar, 1000);
 
             if (modMm >= maxDepthMm)
             {

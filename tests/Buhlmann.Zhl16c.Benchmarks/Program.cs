@@ -9,6 +9,8 @@ using Buhlmann.Zhl16c.Utilities;
 PlanNoDeco();
 PlanDeco45();
 PlanDeco48();
+PlanDeco40();
+PlanDeco79();
 
 return;
 
@@ -233,6 +235,170 @@ void PlanDeco48()
         new()
         {
             DepthMm = 48 * 1000, DurationSeconds = 40 * 60 - 48 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
+        }
+    ];
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    
+    Console.WriteLine(plan.ToString());
+}
+void PlanDeco40()
+{
+    Cylinder[] cylinders =
+    [
+        new()
+        {
+            O2Permille = 210,
+            HePermille = 0,
+            SizeMl = 24000,
+            StartPressureMbar = 200000
+        },
+        new()
+        {
+            O2Permille = 500,
+            HePermille = 0,
+            SizeMl = 12000,
+            StartPressureMbar = 200000,
+            Use = CylinderUse.Deco
+        }
+    ];
+    var settings = new PlannerSettings
+    {
+        Deco = new DecoSettings
+        {
+            GFLow = 30,
+            GFHigh = 75
+        },
+        Gas = new GasSettings
+        {
+            BottomPo2Mbar = 1400,
+            DecoPo2Mbar = 1600
+        },
+        Reserve = new ReserveGasSettings
+        {
+            ReservePressureMbar = 50000,
+            CalculateMinGas = true,
+            TeamSize = 2,
+            SacStressFactor = 4
+        },
+        AscentDescent = new AscentDescentSettings
+        {
+            DescentRateMmSec = 5 * 1000 / 60,
+            AscentRate75MmSec = 5 * 1000 / 60,
+            AscentRate50MmSec = 5 * 1000 / 60,
+            AscentRateStopsMmSec = 5 * 1000 / 60,
+            AscentRateLast6mMmSec = 1 * 1000 / 60
+        },
+        Stops = new StopSettings
+        {
+            LastStopAt6m = true,
+            SafetyStop = false,
+            MinSwitchDurationSec = 3 * 60,
+            ProblemSolvingTimeMin = 4,
+            SwitchAtRequiredStop = false
+        },
+        Environment = new EnvironmentSettings
+        {
+            SurfacePressureMbar = 1013,
+            WaterType = WaterType.Salt
+        }
+    };
+    var context = new DiveContext(1013, WaterType.Salt);
+
+    Waypoint[] waypoints =
+    [
+        new()
+        {
+            DepthMm = 40 * 1000, DurationSeconds = 40 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
+        },
+        new()
+        {
+            DepthMm = 40 * 1000, DurationSeconds = 45 * 60 - 40 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
+        }
+    ];
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    
+    Console.WriteLine(plan.ToString());
+}
+void PlanDeco79()
+{
+    Cylinder[] cylinders =
+    [
+        new()
+        {
+            O2Permille = 150,
+            HePermille = 450,
+            SizeMl = 24000,
+            StartPressureMbar = 200000
+        },
+        new()
+        {
+            O2Permille = 360,
+            HePermille = 0,
+            SizeMl = 12000,
+            StartPressureMbar = 200000,
+            Use = CylinderUse.Deco
+        },
+        new()
+        {
+            O2Permille = 1000,
+            HePermille = 0,
+            SizeMl = 12000,
+            StartPressureMbar = 200000,
+            Use = CylinderUse.Deco
+        }
+    ];
+    var settings = new PlannerSettings
+    {
+        Deco = new DecoSettings
+        {
+            GFLow = 60,
+            GFHigh = 80
+        },
+        Gas = new GasSettings
+        {
+            BottomPo2Mbar = 1400,
+            DecoPo2Mbar = 1600
+        },
+        Reserve = new ReserveGasSettings
+        {
+            ReservePressureMbar = 50000,
+            CalculateMinGas = true,
+            TeamSize = 2,
+            SacStressFactor = 4
+        },
+        AscentDescent = new AscentDescentSettings
+        {
+            DescentRateMmSec = 5 * 1000 / 60,
+            AscentRate75MmSec = 5 * 1000 / 60,
+            AscentRate50MmSec = 5 * 1000 / 60,
+            AscentRateStopsMmSec = 5 * 1000 / 60,
+            AscentRateLast6mMmSec = 1 * 1000 / 60
+        },
+        Stops = new StopSettings
+        {
+            LastStopAt6m = true,
+            SafetyStop = false,
+            MinSwitchDurationSec = 3 * 60,
+            ProblemSolvingTimeMin = 4,
+            SwitchAtRequiredStop = false
+        },
+        Environment = new EnvironmentSettings
+        {
+            SurfacePressureMbar = 1013,
+            WaterType = WaterType.Salt
+        }
+    };
+    var context = new DiveContext(1013, WaterType.Salt);
+
+    Waypoint[] waypoints =
+    [
+        new()
+        {
+            DepthMm = 79 * 1000, DurationSeconds = 79 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
+        },
+        new()
+        {
+            DepthMm = 79 * 1000, DurationSeconds = 30 * 60 - 79 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);

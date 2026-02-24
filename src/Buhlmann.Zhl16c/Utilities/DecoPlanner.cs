@@ -150,20 +150,38 @@ public static class DecoPlanner
             cylinders, maxDepthMm, settings.Gas.DecoPo2Mbar, context, gasChanges);
         var gi = 0;
 
-        var stopLevels = DecoStopLevels.Mm;
-
-        var minStopIdx = settings.Stops.LastStopAt6m ? 2 : 1;
-
-        var stopIdx = 0;
-        for (var i = 0; i < stopLevels.Length; i++)
+        var decoStops = DecoStopLevels.Mm;
+        var decoStopIdx = 0;
+        
+        for (var i = 0; i < decoStops.Length; i++)
         {
-            if (stopLevels[i] >= depthMm)
+            if (decoStops[i] >= depthMm)
             {
                 break;
             }
 
-            stopIdx = i;
+            decoStopIdx = i;
         }
+
+        var decoCount = decoStopIdx + 1;
+        Span<int> stopLevels = stackalloc int[decoCount + gasChangeCount];
+        var mergedCount = MergeSortedStops(decoStops.AsSpan(0, decoCount), gasChanges, gasChangeCount, stopLevels);
+        var stopIdx = mergedCount - 1;
+        
+        // var stopLevels = DecoStopLevels.Mm;
+        //
+        var minStopIdx = settings.Stops.LastStopAt6m ? 2 : 1;
+        //
+        // var stopIdx = 0;
+        // for (var i = 0; i < stopLevels.Length; i++)
+        // {
+        //     if (stopLevels[i] >= depthMm)
+        //     {
+        //         break;
+        //     }
+        //
+        //     stopIdx = i;
+        // }
 
         ds.CeilingMm(gfLow, gfHigh, context);
 
@@ -257,7 +275,7 @@ public static class DecoPlanner
                             switchDur, diveMode, setpointMbar);
 
                         result.Segments[segmentCount - 1].RuntimeEndSec = clock + switchDur;
-                        
+
                         clock += switchDur;
                         ascentStartClock = clock;
                     }
@@ -406,5 +424,50 @@ public static class DecoPlanner
         result.AvgDepthMm = avgDepthMm;
 
         return result;
+    }
+
+    private static int MergeSortedStops(ReadOnlySpan<int> decoStops,
+        ReadOnlySpan<GasSelector.GasChange> gasChanges,
+        int gasChangeCount,
+        Span<int> output)
+    {
+        var di = 0;
+        var gci = gasChangeCount - 1;
+        var count = 0;
+
+        while (di < decoStops.Length && gci >= 0)
+        {
+            var decoDepth = decoStops[di];
+            var gasDepth = gasChanges[gci].DepthMm;
+
+            if (decoDepth < gasDepth)
+            {
+                output[count++] = decoDepth;
+                di++;
+            }
+            else if (decoDepth == gasDepth)
+            {
+                output[count++] = decoDepth;
+                di++;
+                gci--;
+            }
+            else
+            {
+                output[count++] = gasDepth;
+                gci--;
+            }
+        }
+
+        while (di < decoStops.Length)
+        {
+            output[count++] = decoStops[di++];
+        }
+
+        while (gci >= 0)
+        {
+            output[count++] = gasChanges[gci--].DepthMm;
+        }
+
+        return count;
     }
 }
