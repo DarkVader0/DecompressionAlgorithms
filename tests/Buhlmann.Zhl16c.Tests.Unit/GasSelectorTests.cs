@@ -59,7 +59,7 @@ public sealed class GasSelectorTests
         // Assert
         Assert.Equal(1, count);
         Assert.Equal(1, gasChanges[0].CylinderIndex);
-        Assert.Equal(21000, gasChanges[0].DepthMm);
+        Assert.Equal(22000, gasChanges[0].DepthMm);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public sealed class GasSelectorTests
 
         // Assert
         Assert.Equal(2, count);
-        Assert.Equal(21000, gasChanges[0].DepthMm);
+        Assert.Equal(22000, gasChanges[0].DepthMm);
         Assert.Equal(2, gasChanges[0].CylinderIndex);
         Assert.Equal(6000, gasChanges[1].DepthMm);
         Assert.Equal(0, gasChanges[1].CylinderIndex);

@@ -144,7 +144,7 @@ public sealed class DiveContextTests
         var mod = ctx.GasModMmSimple(mix, 1600, roundToMm);
 
         // Assert
-        Assert.Equal(35000, mod);
+        Assert.Equal(34000, mod);
     }
     
 

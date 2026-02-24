@@ -52,6 +52,7 @@ public struct DiveContext
         return RelMbarToDepthMm(mbar - SurfacePressureMbar);
     }
 
+    // TODO: Implement option for real vs simple Gas MOD calculations
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GasModMm(GasMix mix,
         int po2LimitMbar,
