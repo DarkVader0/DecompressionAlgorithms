@@ -131,6 +131,22 @@ public sealed class DiveContextTests
         // Assert
         Assert.Equal(60000, mod14);
     }
+    
+    [Fact]
+    public void GasModMmSimple_ShouldReturn34m_WhenNx36()
+    {
+        // Arrange
+        var ctx = DiveContext.Default;
+        var mix = new GasMix(360, 0);
+        const int roundToMm = 1000;
+
+        // Act
+        var mod = ctx.GasModMmSimple(mix, 1600, roundToMm);
+
+        // Assert
+        Assert.Equal(35000, mod);
+    }
+    
 
     [Fact]
     public void GasModMmSimple_ShouldReturn22m_WhenNx50()

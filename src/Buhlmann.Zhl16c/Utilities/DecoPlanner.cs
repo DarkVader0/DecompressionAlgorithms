@@ -167,21 +167,7 @@ public static class DecoPlanner
         Span<int> stopLevels = stackalloc int[decoCount + gasChangeCount];
         var mergedCount = MergeSortedStops(decoStops.AsSpan(0, decoCount), gasChanges, gasChangeCount, stopLevels);
         var stopIdx = mergedCount - 1;
-        
-        // var stopLevels = DecoStopLevels.Mm;
-        //
         var minStopIdx = settings.Stops.LastStopAt6m ? 2 : 1;
-        //
-        // var stopIdx = 0;
-        // for (var i = 0; i < stopLevels.Length; i++)
-        // {
-        //     if (stopLevels[i] >= depthMm)
-        //     {
-        //         break;
-        //     }
-        //
-        //     stopIdx = i;
-        // }
 
         ds.CeilingMm(gfLow, gfHigh, context);
 
@@ -253,11 +239,12 @@ public static class DecoPlanner
                     currentMix = new GasMix(
                         cylinders[currentCylIdx].O2Permille,
                         cylinders[currentCylIdx].HePermille);
+                    var switchDur = (int)settings.Stops.MinSwitchDurationSec;
 
                     result.Segments[segmentCount++] = new PlanSegment
                     {
                         RuntimeStartSec = clock,
-                        RuntimeEndSec = clock,
+                        RuntimeEndSec = clock + switchDur,
                         DepthStartMm = depthMm,
                         DepthEndMm = depthMm,
                         CylinderIndex = (byte)currentCylIdx,
@@ -265,20 +252,9 @@ public static class DecoPlanner
                         DiveMode = diveMode,
                         SetpointMbar = (ushort)setpointMbar
                     };
-
-                    if (cylinders[currentCylIdx].O2Permille != 1000 &&
-                        settings.Stops.MinSwitchDurationSec > 0)
-                    {
-                        var switchDur = (int)settings.Stops.MinSwitchDurationSec;
-                        ds.AddSegment(
-                            context.DepthToBar(depthMm), currentMix,
-                            switchDur, diveMode, setpointMbar);
-
-                        result.Segments[segmentCount - 1].RuntimeEndSec = clock + switchDur;
-
-                        clock += switchDur;
-                        ascentStartClock = clock;
-                    }
+                    
+                    clock += switchDur;
+                    ascentStartClock = clock;
                 }
 
                 gi++;
