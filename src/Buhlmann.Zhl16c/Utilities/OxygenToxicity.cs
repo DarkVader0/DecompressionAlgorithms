@@ -1,4 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
+using Buhlmann.Zhl16c.Enums;
+using Buhlmann.Zhl16c.Helpers;
+using Buhlmann.Zhl16c.Input;
+using Buhlmann.Zhl16c.Output;
 
 namespace Buhlmann.Zhl16c.Utilities;
 
@@ -53,5 +57,52 @@ public static class OxygenToxicity
     {
         var avgPo2Mbar = (startPo2Mbar + endPo2Mbar) / 2;
         return CalculateOtu(avgPo2Mbar, durationSec);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ApplyToPlan(ref PlanResult result,
+        ReadOnlySpan<Cylinder> cylinders,
+        DiveContext context)
+    {
+        var cns = 0.0;
+        var otu = 0.0;
+
+        for (var i = 0; i < result.SegmentCount; i++)
+        {
+            ref readonly var seg = ref result.Segments[i];
+            var mix = new GasMix(cylinders[seg.CylinderIndex].O2Permille, cylinders[seg.CylinderIndex].HePermille);
+            var duration = seg.RuntimeEndSec - seg.RuntimeStartSec;
+
+            if (duration <= 0)
+            {
+                continue;
+            }
+
+            if (seg.DepthStartMm == seg.DepthEndMm)
+            {
+                var po2 = seg is { DiveMode: DiveMode.CCR, SetpointMbar: > 0 }
+                    ? Math.Min(seg.SetpointMbar, context.DepthToMbar(seg.DepthEndMm) * mix.O2Permille / 1000)
+                    : context.PO2Mbar(mix, seg.DepthEndMm);
+
+                cns += CalculateCns(po2, duration);
+                otu += CalculateOtu(po2, duration);
+
+                continue;
+            }
+
+            var startPo2 = seg is { DiveMode: DiveMode.CCR, SetpointMbar: > 0 }
+                ? Math.Min(seg.SetpointMbar, context.DepthToMbar(seg.DepthStartMm) * mix.O2Permille / 1000)
+                : context.PO2Mbar(mix, seg.DepthStartMm);
+
+            var endPo2 = seg is { DiveMode: DiveMode.CCR, SetpointMbar: > 0 }
+                ? Math.Min(seg.SetpointMbar, context.DepthToMbar(seg.DepthEndMm) * mix.O2Permille / 1000)
+                : context.PO2Mbar(mix, seg.DepthEndMm);
+
+            cns += CalculateCnsTransition(startPo2, endPo2, duration);
+            otu += CalculateOtuTransition(startPo2, endPo2, duration);
+        }
+
+        result.CnsPercent = (ushort)Math.Min(cns, ushort.MaxValue);
+        result.OtuTotal = (ushort)Math.Min(otu, ushort.MaxValue);
     }
 }

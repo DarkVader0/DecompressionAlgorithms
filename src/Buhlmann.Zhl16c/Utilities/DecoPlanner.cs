@@ -152,7 +152,7 @@ public static class DecoPlanner
 
         var decoStops = DecoStopLevels.Mm;
         var decoStopIdx = 0;
-        
+
         for (var i = 0; i < decoStops.Length; i++)
         {
             if (decoStops[i] >= depthMm)
@@ -252,7 +252,7 @@ public static class DecoPlanner
                         DiveMode = diveMode,
                         SetpointMbar = (ushort)setpointMbar
                     };
-                    
+
                     clock += switchDur;
                     ascentStartClock = clock;
                 }
