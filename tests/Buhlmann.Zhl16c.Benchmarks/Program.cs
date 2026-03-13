@@ -82,9 +82,10 @@ void PlanNoDeco()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
+
 void PlanDeco45()
 {
     Cylinder[] cylinders =
@@ -160,9 +161,10 @@ void PlanDeco45()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
+
 void PlanDeco48()
 {
     Cylinder[] cylinders =
@@ -238,9 +240,10 @@ void PlanDeco48()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
+
 void PlanDeco40()
 {
     Cylinder[] cylinders =
@@ -316,9 +319,10 @@ void PlanDeco40()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
+
 void PlanDeco79()
 {
     Cylinder[] cylinders =
@@ -402,6 +406,6 @@ void PlanDeco79()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     Console.WriteLine(plan.ToString());
 }

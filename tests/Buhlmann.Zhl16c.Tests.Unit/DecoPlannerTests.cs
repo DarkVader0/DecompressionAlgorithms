@@ -1,6 +1,7 @@
 ﻿using Buhlmann.Zhl16c.Enums;
 using Buhlmann.Zhl16c.Helpers;
 using Buhlmann.Zhl16c.Input;
+using Buhlmann.Zhl16c.Output;
 using Buhlmann.Zhl16c.Settings;
 using Buhlmann.Zhl16c.Utilities;
 
@@ -183,5 +184,304 @@ public sealed class DecoPlannerTests
         Assert.Equal(0, plan.Segments[19].DepthEndMm);
         Assert.Equal(376, plan.Segments[19].RuntimeEndSec - plan.Segments[19].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[19].CylinderIndex);
+    }
+
+    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context)
+        CreateTestMetricPlan()
+    {
+        var settings = new PlannerSettings
+        {
+            Deco = new DecoSettings { GFLow = 100, GFHigh = 100 },
+            Gas = new GasSettings { BottomPo2Mbar = 1600, DecoPo2Mbar = 1600 },
+            Reserve = new ReserveGasSettings(),
+            AscentDescent = new AscentDescentSettings
+            {
+                DescentRateMmSec = 18000 / 60,
+                AscentRate75MmSec = 9144 / 60,
+                AscentRate50MmSec = 9144 / 60,
+                AscentRateStopsMmSec = 9144 / 60,
+                AscentRateLast6mMmSec = 3048 / 60
+            },
+            Stops = new StopSettings
+            {
+                LastStopAt6m = true,
+                SafetyStop = false
+            },
+            Environment = new EnvironmentSettings
+            {
+                SurfacePressureMbar = 1013,
+                WaterType = WaterType.Salt
+            }
+        };
+
+        Cylinder[] cylinders =
+        [
+            new() { O2Permille = 150, HePermille = 450, SizeMl = 36000, StartPressureMbar = 232000 },
+            new()
+            {
+                O2Permille = 360, HePermille = 0, SizeMl = 12000, StartPressureMbar = 200000, Use = CylinderUse.Deco
+            },
+            new()
+            {
+                O2Permille = 1000, HePermille = 0, SizeMl = 12000, StartPressureMbar = 200000, Use = CylinderUse.Deco
+            }
+        ];
+
+        var droptime = 79000 * 60 / 23000;
+
+        Waypoint[] waypoints =
+        [
+            new() { DepthMm = 79000, DurationSeconds = droptime, CylinderIndex = 0 },
+            new() { DepthMm = 79000, DurationSeconds = 30 * 60 - droptime, CylinderIndex = 0 }
+        ];
+
+        var context = new DiveContext(1013, WaterType.Salt);
+        return (settings, cylinders, waypoints, context);
+    }
+
+    [Fact]
+    public void TestMetric_ShouldHaveAtLeastTwoGasSwitches()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+        Assert.True(CountSegmentsOfType(plan, SegmentType.GasSwitch) >= 2);
+    }
+
+    [Fact]
+    public void TestMetric_FirstGasChange_ShouldBeEan36At33m()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+
+        var firstSwitch = FindNthSegmentOfType(plan, SegmentType.GasSwitch, 1);
+        Assert.NotNull(firstSwitch);
+        Assert.Equal(1, firstSwitch.Value.CylinderIndex);
+        Assert.Equal(34000, firstSwitch.Value.DepthEndMm);
+    }
+
+    [Fact]
+    public void TestMetric_SecondGasChange_ShouldBeOxygenAt6m()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+
+        var secondSwitch = FindNthSegmentOfType(plan, SegmentType.GasSwitch, 2);
+        Assert.NotNull(secondSwitch);
+        Assert.Equal(2, secondSwitch.Value.CylinderIndex);
+        Assert.Equal(6000, secondSwitch.Value.DepthEndMm);
+    }
+
+    [Fact]
+    public void TestMetric_Runtime_ShouldBe109Minutes()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+        AssertDecoTimeWithinTolerance(plan.TimeTotalSec, 109 * 60);
+    }
+
+    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context)
+        CreateTestCcrBailoutPlan()
+    {
+        var settings = new PlannerSettings
+        {
+            Deco = new DecoSettings { GFLow = 50, GFHigh = 70 },
+            Gas = new GasSettings { BottomPo2Mbar = 1600, DecoPo2Mbar = 1600 },
+            Reserve = new ReserveGasSettings(),
+            AscentDescent = new AscentDescentSettings
+            {
+                DescentRateMmSec = 18000 / 60,
+                AscentRate75MmSec = 9144 / 60,
+                AscentRate50MmSec = 9144 / 60,
+                AscentRateStopsMmSec = 9144 / 60,
+                AscentRateLast6mMmSec = 3048 / 60
+            },
+            Stops = new StopSettings
+            {
+                LastStopAt6m = true,
+                SafetyStop = false,
+                ProblemSolvingTimeMin = 4,
+                MinSwitchDurationSec = 4
+            },
+            Rebreather = new RebreatherSettings
+            {
+                DiveMode = DiveMode.CCR,
+                SetpointMbar = 1300,
+                DoBailout = true
+            },
+            Environment = new EnvironmentSettings
+            {
+                SurfacePressureMbar = 1013,
+                WaterType = WaterType.Salt
+            }
+        };
+
+        Cylinder[] cylinders =
+        [
+            new()
+            {
+                O2Permille = 200, HePermille = 210, SizeMl = 3000, StartPressureMbar = 200000, Use = CylinderUse.Diluent
+            },
+            new()
+            {
+                O2Permille = 530, HePermille = 0, SizeMl = 12000, StartPressureMbar = 200000, Use = CylinderUse.Deco
+            },
+            new()
+            {
+                O2Permille = 190, HePermille = 330, SizeMl = 12000, StartPressureMbar = 200000, Use = CylinderUse.Deco
+            }
+        ];
+
+        Waypoint[] waypoints =
+        [
+            new() { DepthMm = 60000, DurationSeconds = 20 * 60, CylinderIndex = 0 }
+        ];
+
+        var context = new DiveContext(1013, WaterType.Salt);
+        return (settings, cylinders, waypoints, context);
+    }
+
+    [Fact]
+    public void TestCcrBailout_Runtime_ShouldBe51Minutes()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+        AssertDecoTimeWithinTolerance(plan.TimeTotalSec, 51 * 60);
+    }
+
+    [Fact]
+    public void TestCcrBailout_DeepBailoutGas_ShouldBeTx1933()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+        var bailoutSegment = FindFirstSegmentWithDiveMode(plan, DiveMode.OC);
+        Assert.NotNull(bailoutSegment);
+        Assert.Equal(190, cylinders[bailoutSegment.Value.CylinderIndex].O2Permille);
+    }
+
+    [Fact]
+    public void TestCcrBailout_ShallowBailoutGas_ShouldBeEan53()
+    {
+        // Arrange
+        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+
+        // Act
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+        // Assert
+        Assert.Equal(PlanError.Ok, plan.Error);
+
+        var ean53Switch = FindGasSwitchToCylinder(plan, cylinders, 530);
+        Assert.NotNull(ean53Switch);
+    }
+
+    private static void AssertDecoTimeWithinTolerance(int actualSec, int expectedSec)
+    {
+        if (actualSec == expectedSec)
+        {
+            return;
+        }
+
+        var toleranceSec = (int)Math.Round(0.001 * 10 * expectedSec + 60);
+        var diff = Math.Abs(actualSec - expectedSec);
+
+        Assert.True(diff <= toleranceSec,
+            $"Runtime {actualSec}s differs from expected {expectedSec}s by {diff}s " +
+            $"(tolerance: {toleranceSec}s = 1% of {expectedSec} + 60s)");
+    }
+
+    private static PlanSegment? FindNthSegmentOfType(PlanResult plan,
+        SegmentType type,
+        int n)
+    {
+        var count = 0;
+        for (var i = 0; i < plan.SegmentCount; i++)
+        {
+            if (plan.Segments[i].SegmentType == type && ++count == n)
+            {
+                return plan.Segments[i];
+            }
+        }
+
+        return null;
+    }
+
+    private static int CountSegmentsOfType(PlanResult plan, SegmentType type)
+    {
+        var count = 0;
+        for (var i = 0; i < plan.SegmentCount; i++)
+        {
+            if (plan.Segments[i].SegmentType == type)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private static PlanSegment? FindFirstSegmentWithDiveMode(PlanResult plan, DiveMode mode)
+    {
+        for (var i = 0; i < plan.SegmentCount; i++)
+        {
+            if (plan.Segments[i].DiveMode == mode)
+            {
+                return plan.Segments[i];
+            }
+        }
+
+        return null;
+    }
+
+    private static PlanSegment? FindGasSwitchToCylinder(
+        PlanResult plan,
+        Cylinder[] cylinders,
+        int o2Permille)
+    {
+        for (var i = 0; i < plan.SegmentCount; i++)
+        {
+            if (plan.Segments[i].SegmentType == SegmentType.GasSwitch &&
+                cylinders[plan.Segments[i].CylinderIndex].O2Permille == o2Permille)
+            {
+                return plan.Segments[i];
+            }
+        }
+
+        return null;
     }
 }

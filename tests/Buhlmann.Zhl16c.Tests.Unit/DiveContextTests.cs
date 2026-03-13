@@ -131,7 +131,7 @@ public sealed class DiveContextTests
         // Assert
         Assert.Equal(60000, mod14);
     }
-    
+
     [Fact]
     public void GasModMmSimple_ShouldReturn34m_WhenNx36()
     {
@@ -146,7 +146,7 @@ public sealed class DiveContextTests
         // Assert
         Assert.Equal(34000, mod);
     }
-    
+
 
     [Fact]
     public void GasModMmSimple_ShouldReturn22m_WhenNx50()
