@@ -8,11 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\Buhlmann.Zhl16c\Buhlmann.Zhl16c.csproj" />
+        <ProjectReference Include="..\..\src\Buhlmann.Zhl16c\Buhlmann.Zhl16c.csproj"/>
     </ItemGroup>
 
 </Project>
