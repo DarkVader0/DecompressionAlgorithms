@@ -77,7 +77,7 @@ public struct PlanResult
         }
 
         sb.AppendLine();
-        sb.AppendLine($"CNS: {CnsPercent}%, OTU: {OtuTotal}, Deco time: {(DecoTimeSec + 30) / 60}min");
+        sb.AppendLine($"CNS: {CnsPercent}%, OTU: {OtuTotal}, TTS: {(DecoTimeSec + 30) / 60}min");
 
         return sb.ToString();
     }

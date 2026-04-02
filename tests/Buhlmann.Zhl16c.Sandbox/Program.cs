@@ -35,7 +35,9 @@ void PlanNoDeco()
         Gas = new GasSettings
         {
             BottomPo2Mbar = 1400,
-            DecoPo2Mbar = 1400
+            DecoPo2Mbar = 1600,
+            BottomSacMl = 15000,
+            DecoSacMl = 10000,
         },
         Reserve = new ReserveGasSettings
         {
@@ -116,7 +118,9 @@ void PlanDeco45()
         Gas = new GasSettings
         {
             BottomPo2Mbar = 1400,
-            DecoPo2Mbar = 1600
+            DecoPo2Mbar = 1600,
+            BottomSacMl = 15000,
+            DecoSacMl = 10000,
         },
         Reserve = new ReserveGasSettings
         {
@@ -197,7 +201,9 @@ void PlanDeco48()
         Gas = new GasSettings
         {
             BottomPo2Mbar = 1400,
-            DecoPo2Mbar = 1600
+            DecoPo2Mbar = 1600,
+            BottomSacMl = 15000,
+            DecoSacMl = 10000,
         },
         Reserve = new ReserveGasSettings
         {
@@ -278,7 +284,9 @@ void PlanDeco40()
         Gas = new GasSettings
         {
             BottomPo2Mbar = 1400,
-            DecoPo2Mbar = 1600
+            DecoPo2Mbar = 1600,
+            BottomSacMl = 15000,
+            DecoSacMl = 10000,
         },
         Reserve = new ReserveGasSettings
         {
@@ -367,7 +375,9 @@ void PlanDeco79()
         Gas = new GasSettings
         {
             BottomPo2Mbar = 1400,
-            DecoPo2Mbar = 1600
+            DecoPo2Mbar = 1600,
+            BottomSacMl = 15000,
+            DecoSacMl = 10000,
         },
         Reserve = new ReserveGasSettings
         {
