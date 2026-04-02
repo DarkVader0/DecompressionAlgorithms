@@ -4,10 +4,15 @@ using Buhlmann.Zhl16c.Input;
 using Buhlmann.Zhl16c.Settings;
 using Buhlmann.Zhl16c.Utilities;
 
+Console.WriteLine("================================= NO DECO GAS =================================");
 PlanNoDeco();
+Console.WriteLine("================================ 45m for 45min ================================");
 PlanDeco45();
+Console.WriteLine("================================ 48m for 45min ================================");
 PlanDeco48();
+Console.WriteLine("================================ 40m for 45min ================================");
 PlanDeco40();
+Console.WriteLine("===================================== 79m =====================================");
 PlanDeco79();
 
 return;
