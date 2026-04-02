@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+﻿﻿using System.Runtime.InteropServices;
 using System.Text;
 using Buhlmann.Zhl16c.Enums;
 
@@ -69,16 +69,16 @@ public struct PlanResult
         sb.AppendLine();
         sb.AppendLine($"Runtime: {(TimeTotalSec + 30) / 60}min ({TimeTotalSec}s)");
         sb.AppendLine($"Max depth: {MaxDepthMm / 1000}m");
-        
+
         for (i = 0; i < CylinderCount; i++)
         {
-            sb.AppendLine($"Used {CylinderResults[i].GasUsedMl}, End Pressure {CylinderResults[i].EndPressureMbar}mbar, Min Required {CylinderResults[i].MinGasRequiredMl}ml");
+            ref var cr = ref CylinderResults[i];
+            sb.AppendLine($"({cr.Mix}): Used {cr.GasUsedMl/1000}l, End {cr.EndPressureMbar/1000}bar, MinGas {cr.MinGasRequiredMl/1000}l");
         }
 
         sb.AppendLine();
-
         sb.AppendLine($"CNS: {CnsPercent}%, OTU: {OtuTotal}, Deco time: {(DecoTimeSec + 30) / 60}min");
-        
+
         return sb.ToString();
     }
 }

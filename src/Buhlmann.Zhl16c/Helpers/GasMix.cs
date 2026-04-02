@@ -26,4 +26,17 @@ public readonly struct GasMix
 
     public static GasMix Air => new(210, 0);
     public static GasMix Oxygen => new(1000, 0);
+
+    public override string ToString()
+    {
+        if (IsAir) return "Air";
+        if (IsOxygen) return "O2";
+        
+        var o2Percent = (O2Permille + 5) / 10;
+        var hePercent = (HePermille + 5) / 10;
+        
+        if(IsTrimix) return $"TX{o2Percent}/{hePercent}";
+        
+        return $"NX{o2Percent}";
+    }
 }

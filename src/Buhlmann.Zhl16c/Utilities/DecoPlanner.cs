@@ -1,4 +1,4 @@
-﻿using Buhlmann.Zhl16c.Constants;
+﻿﻿using Buhlmann.Zhl16c.Constants;
 using Buhlmann.Zhl16c.Enums;
 using Buhlmann.Zhl16c.Helpers;
 using Buhlmann.Zhl16c.Input;
@@ -27,11 +27,25 @@ public static class DecoPlanner
             Error = PlanError.Ok
         };
 
+        for (var ci = 0; ci < cylinders.Length; ci++)
+        {
+            result.CylinderResults[ci].Mix =
+                new GasMix(cylinders[ci].O2Permille, cylinders[ci].HePermille).ToString();
+        }
+
+        Span<int> gasUsedPerCyl = stackalloc int[cylinders.Length];
+        Span<int> decoGasUsedPerCyl = stackalloc int[cylinders.Length];
+        gasUsedPerCyl.Clear();
+        decoGasUsedPerCyl.Clear();
+
         var segmentCount = 0;
         var surfacePressureBar = context.SurfacePressureMbar / 1000.0;
         var ds = DecoState.CreateAtSurface(surfacePressureBar);
         var gfLow = settings.Deco.GFLow / 100.0;
         var gfHigh = settings.Deco.GFHigh / 100.0;
+
+        var bottomSac = settings.Gas.BottomSacMl > 0 ? (int)settings.Gas.BottomSacMl : 20;
+        var decoSac = settings.Gas.DecoSacMl > 0 ? (int)settings.Gas.DecoSacMl : 15;
 
         var bottomGasIdx = GasSelector.FindBottomGas(cylinders);
         if (bottomGasIdx < 0)
@@ -70,6 +84,14 @@ public static class DecoPlanner
 
             depthTimeIntegral += (startDepthMm + endDepthMm) * duration / 2;
 
+            var segGas = 0;
+            if (setpointMbar == 0)
+            {
+                segGas = GasConsumption.CalculateForTransition(
+                    startDepthMm, endDepthMm, duration, bottomSac, context);
+                gasUsedPerCyl[cylIdx] += segGas;
+            }
+
             result.Segments[segmentCount++] = new PlanSegment
             {
                 RuntimeStartSec = clock,
@@ -77,6 +99,7 @@ public static class DecoPlanner
                 DepthStartMm = startDepthMm,
                 DepthEndMm = endDepthMm,
                 CylinderIndex = (byte)cylIdx,
+                GasUsedMl = segGas,
                 SegmentType = endDepthMm > startDepthMm
                     ? SegmentType.Descent
                     : endDepthMm < startDepthMm
@@ -130,6 +153,10 @@ public static class DecoPlanner
                 context.DepthToBar(depthMm), currentMix,
                 bailoutSec, diveMode, 0);
 
+            var segGas = GasConsumption.CalculateForTransition(
+                depthMm, depthMm, bailoutSec, bottomSac, context);
+            gasUsedPerCyl[currentCylIdx] += segGas;
+
             result.Segments[segmentCount++] = new PlanSegment
             {
                 RuntimeStartSec = clock,
@@ -137,6 +164,7 @@ public static class DecoPlanner
                 DepthStartMm = depthMm,
                 DepthEndMm = depthMm,
                 CylinderIndex = (byte)currentCylIdx,
+                GasUsedMl = segGas,
                 SegmentType = SegmentType.Bottom,
                 DiveMode = diveMode
             };
@@ -211,6 +239,16 @@ public static class DecoPlanner
 
             if (depthMm != ascentStartDepth)
             {
+                var ascentDuration = clock - ascentStartClock;
+                var segGas = 0;
+                if (setpointMbar == 0)
+                {
+                    segGas = GasConsumption.CalculateForTransition(
+                        ascentStartDepth, depthMm, ascentDuration, decoSac, context);
+                    gasUsedPerCyl[currentCylIdx] += segGas;
+                    decoGasUsedPerCyl[currentCylIdx] += segGas;
+                }
+
                 result.Segments[segmentCount++] = new PlanSegment
                 {
                     RuntimeStartSec = ascentStartClock,
@@ -218,6 +256,7 @@ public static class DecoPlanner
                     DepthStartMm = ascentStartDepth,
                     DepthEndMm = depthMm,
                     CylinderIndex = (byte)currentCylIdx,
+                    GasUsedMl = segGas,
                     SegmentType = SegmentType.Ascent,
                     DiveMode = diveMode,
                     SetpointMbar = (ushort)setpointMbar
@@ -241,6 +280,15 @@ public static class DecoPlanner
                         cylinders[currentCylIdx].HePermille);
                     var switchDur = (int)settings.Stops.MinSwitchDurationSec;
 
+                    var segGas = 0;
+                    if (setpointMbar == 0)
+                    {
+                        segGas = GasConsumption.CalculateForTransition(
+                            depthMm, depthMm, switchDur, decoSac, context);
+                        gasUsedPerCyl[currentCylIdx] += segGas;
+                        decoGasUsedPerCyl[currentCylIdx] += segGas;
+                    }
+
                     result.Segments[segmentCount++] = new PlanSegment
                     {
                         RuntimeStartSec = clock,
@@ -248,6 +296,7 @@ public static class DecoPlanner
                         DepthStartMm = depthMm,
                         DepthEndMm = depthMm,
                         CylinderIndex = (byte)currentCylIdx,
+                        GasUsedMl = segGas,
                         SegmentType = SegmentType.GasSwitch,
                         DiveMode = diveMode,
                         SetpointMbar = (ushort)setpointMbar
@@ -313,6 +362,15 @@ public static class DecoPlanner
                             o2breakNext = true;
                             breakFromCylIdx = currentCylIdx;
 
+                            var segGas = 0;
+                            if (setpointMbar == 0)
+                            {
+                                segGas = GasConsumption.CalculateForTransition(
+                                    depthMm, depthMm, lastStopTime, decoSac, context);
+                                gasUsedPerCyl[currentCylIdx] += segGas;
+                                decoGasUsedPerCyl[currentCylIdx] += segGas;
+                            }
+
                             result.Segments[segmentCount++] = new PlanSegment
                             {
                                 RuntimeStartSec = clock,
@@ -320,6 +378,7 @@ public static class DecoPlanner
                                 DepthStartMm = depthMm,
                                 DepthEndMm = depthMm,
                                 CylinderIndex = (byte)currentCylIdx,
+                                GasUsedMl = segGas,
                                 SegmentType = SegmentType.DecoStop,
                                 DiveMode = diveMode,
                                 SetpointMbar = (ushort)setpointMbar
@@ -339,6 +398,15 @@ public static class DecoPlanner
                             o2breaking = true;
                             o2breakNext = false;
 
+                            var segGas = 0;
+                            if (setpointMbar == 0)
+                            {
+                                segGas = GasConsumption.CalculateForTransition(
+                                    depthMm, depthMm, lastStopTime, decoSac, context);
+                                gasUsedPerCyl[currentCylIdx] += segGas;
+                                decoGasUsedPerCyl[currentCylIdx] += segGas;
+                            }
+
                             result.Segments[segmentCount++] = new PlanSegment
                             {
                                 RuntimeStartSec = clock,
@@ -346,6 +414,7 @@ public static class DecoPlanner
                                 DepthStartMm = depthMm,
                                 DepthEndMm = depthMm,
                                 CylinderIndex = (byte)currentCylIdx,
+                                GasUsedMl = segGas,
                                 SegmentType = SegmentType.DecoStop,
                                 DiveMode = diveMode,
                                 SetpointMbar = (ushort)setpointMbar
@@ -369,6 +438,15 @@ public static class DecoPlanner
 
                 if (!o2breaking)
                 {
+                    var segGas = 0;
+                    if (setpointMbar == 0)
+                    {
+                        segGas = GasConsumption.CalculateForTransition(
+                            depthMm, depthMm, lastStopTime, decoSac, context);
+                        gasUsedPerCyl[stopCylIdx] += segGas;
+                        decoGasUsedPerCyl[stopCylIdx] += segGas;
+                    }
+
                     result.Segments[segmentCount++] = new PlanSegment
                     {
                         RuntimeStartSec = clock,
@@ -376,6 +454,7 @@ public static class DecoPlanner
                         DepthStartMm = depthMm,
                         DepthEndMm = depthMm,
                         CylinderIndex = (byte)stopCylIdx,
+                        GasUsedMl = segGas,
                         SegmentType = SegmentType.DecoStop,
                         DiveMode = diveMode,
                         SetpointMbar = (ushort)setpointMbar
@@ -398,6 +477,40 @@ public static class DecoPlanner
         result.DecoTimeSec = clock - bottomTime;
         result.MaxDepthMm = maxDepthMm;
         result.AvgDepthMm = avgDepthMm;
+
+        for (var i = 0; i < cylinders.Length; i++)
+        {
+            result.CylinderResults[i].GasUsedMl = gasUsedPerCyl[i];
+
+            if (cylinders[i].SizeMl > 0)
+            {
+                result.CylinderResults[i].EndPressureMbar =
+                    GasConsumption.RemainingPressureMbar(
+                        cylinders[i].StartPressureMbar,
+                        gasUsedPerCyl[i],
+                        cylinders[i].SizeMl);
+            }
+        }
+
+        if (settings.Reserve.CalculateMinGas && bottomGasIdx >= 0)
+        {
+            var sacFactor = settings.Reserve.SacStressFactor > 0
+                ? settings.Reserve.SacStressFactor
+                : 2;
+            var problemTimeSec = settings.Stops.ProblemSolvingTimeMin * 60;
+            var teamSize = settings.Reserve.TeamSize > 0
+                ? settings.Reserve.TeamSize
+                : 1;
+
+            var pressureBar = context.DepthToBar(maxDepthMm);
+            var surfPressureBar = context.SurfacePressureMbar / 1000.0;
+            var ata = pressureBar / surfPressureBar;
+
+            var minGasMl = (int)(sacFactor * teamSize * bottomSac * problemTimeSec / 60.0 * ata
+                                 + sacFactor * (double)decoGasUsedPerCyl[bottomGasIdx]);
+
+            result.CylinderResults[bottomGasIdx].MinGasRequiredMl = minGasMl;
+        }
 
         return result;
     }
