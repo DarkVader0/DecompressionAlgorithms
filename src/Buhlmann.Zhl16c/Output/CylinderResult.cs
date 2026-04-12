@@ -8,5 +8,7 @@ public struct CylinderResult
     public string Mix;
     public int EndPressureMbar;
     public int GasUsedMl;
+    public int GasUsedMbar;
     public int MinGasRequiredMl;
+    public int MinGasRequiredMbar;
 }

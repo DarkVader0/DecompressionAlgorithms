@@ -73,7 +73,13 @@ public struct PlanResult
         for (i = 0; i < CylinderCount; i++)
         {
             ref var cr = ref CylinderResults[i];
-            sb.AppendLine($"({cr.Mix}): Used {cr.GasUsedMl/1000}l, End {cr.EndPressureMbar/1000}bar, MinGas {cr.MinGasRequiredMl/1000}l");
+            sb.AppendLine($"({cr.Mix}): Used {cr.GasUsedMbar/1000}bar ({cr.GasUsedMl/1000}L), End {cr.EndPressureMbar/1000}bar, Turn pressure {cr.MinGasRequiredMbar/1000}bar");
+
+            if (cr.EndPressureMbar < cr.MinGasRequiredMbar)
+            {
+                var shortMbar = cr.MinGasRequiredMbar - cr.EndPressureMbar;
+                sb.AppendLine($"  ⚠ Out of gas: {shortMbar/1000}bar short");
+            }
         }
 
         sb.AppendLine();

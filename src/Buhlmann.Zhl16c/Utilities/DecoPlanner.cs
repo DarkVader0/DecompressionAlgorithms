@@ -1,4 +1,4 @@
-﻿﻿using Buhlmann.Zhl16c.Constants;
+﻿using Buhlmann.Zhl16c.Constants;
 using Buhlmann.Zhl16c.Enums;
 using Buhlmann.Zhl16c.Helpers;
 using Buhlmann.Zhl16c.Input;
@@ -482,14 +482,19 @@ public static class DecoPlanner
         {
             result.CylinderResults[i].GasUsedMl = gasUsedPerCyl[i];
 
-            if (cylinders[i].SizeMl > 0)
+            if (cylinders[i].SizeMl <= 0)
             {
-                result.CylinderResults[i].EndPressureMbar =
-                    GasConsumption.RemainingPressureMbar(
-                        cylinders[i].StartPressureMbar,
-                        gasUsedPerCyl[i],
-                        cylinders[i].SizeMl);
+                continue;
             }
+
+            result.CylinderResults[i].EndPressureMbar =
+                GasConsumption.RemainingPressureMbar(
+                    cylinders[i].StartPressureMbar,
+                    gasUsedPerCyl[i],
+                    cylinders[i].SizeMl);
+
+            result.CylinderResults[i].GasUsedMbar =
+                (int)((long)gasUsedPerCyl[i] * 1000 / cylinders[i].SizeMl);
         }
 
         if (!settings.Reserve.CalculateMinGas)
@@ -505,14 +510,54 @@ public static class DecoPlanner
             ? settings.Reserve.TeamSize
             : 1;
 
-        var pressureBar = context.DepthToBar(maxDepthMm);
+        var firstSwitchClock = -1;
+        var firstSwitchDepthMm = 0;
+
+        for (var i = 0; i < segmentCount; i++)
+        {
+            if (result.Segments[i].SegmentType != SegmentType.GasSwitch
+                || result.Segments[i].CylinderIndex == bottomGasIdx)
+            {
+                continue;
+            }
+
+            firstSwitchClock = result.Segments[i].RuntimeStartSec;
+            firstSwitchDepthMm = result.Segments[i].DepthStartMm;
+            break;
+        }
+
+        var decoGasToSwitch = 0;
+        for (var i = 0; i < segmentCount; i++)
+        {
+            ref readonly var seg = ref result.Segments[i];
+            if (seg.CylinderIndex != bottomGasIdx) continue;
+            if (seg.SegmentType is not (SegmentType.DecoStop or SegmentType.Ascent)) continue;
+            if (firstSwitchClock >= 0 && seg.RuntimeStartSec >= firstSwitchClock) break;
+            decoGasToSwitch += seg.GasUsedMl;
+        }
+
+        var refDepthMm = firstSwitchClock >= 0 ? firstSwitchDepthMm : maxDepthMm;
+        var pressureBar = context.DepthToBar(refDepthMm);
         var surfPressureBar = context.SurfacePressureMbar / 1000.0;
         var ata = pressureBar / surfPressureBar;
 
         var minGasMl = (int)(sacFactor * teamSize * bottomSac * problemTimeSec / 60.0 * ata
-                             + sacFactor * (double)decoGasUsedPerCyl[bottomGasIdx]);
+                             + sacFactor * (double)decoGasToSwitch);
 
         result.CylinderResults[bottomGasIdx].MinGasRequiredMl = minGasMl;
+
+        if (cylinders[bottomGasIdx].SizeMl > 0)
+        {
+            var minGasMbar = (int)((long)minGasMl * 1000 / cylinders[bottomGasIdx].SizeMl);
+            result.CylinderResults[bottomGasIdx].MinGasRequiredMbar = minGasMbar;
+        }
+
+        for (var i = 0; i < cylinders.Length; i++)
+        {
+            if (i == bottomGasIdx) continue;
+            result.CylinderResults[i].MinGasRequiredMbar =
+                (int)(cylinders[i].StartPressureMbar * 0.55);
+        }
 
         return result;
     }
