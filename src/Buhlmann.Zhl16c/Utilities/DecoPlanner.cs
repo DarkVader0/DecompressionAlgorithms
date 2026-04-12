@@ -202,13 +202,13 @@ public static class DecoPlanner
         var lastStopTime = DefaultTimestep;
         var ascentStartClock = clock;
 
-        var o2breaking = false;
-        var o2breakNext = false;
+        var o2Breaking = false;
+        var o2BreakNext = false;
         var breakFromCylIdx = -1;
         var o2BreakDurationSec = settings.Stops.O2BreakDurationSec > 0
             ? settings.Stops.O2BreakDurationSec
             : 12 * 60;
-        var backgasBreakDurationSec = settings.Stops.BackgasBreakDurationSec > 0
+        var backGasBreakDurationSec = settings.Stops.BackgasBreakDurationSec > 0
             ? settings.Stops.BackgasBreakDurationSec
             : 6 * 60;
 
@@ -342,13 +342,13 @@ public static class DecoPlanner
 
                 lastStopTime = newClock - clock;
 
-                if (lastStopTime >= 48 * 3600 && depthMm >= 6000 && !o2breaking)
+                if (lastStopTime >= 48 * 3600 && depthMm >= 6000 && !o2Breaking)
                 {
                     result.Error = PlanError.Timeout;
                     break;
                 }
 
-                o2breaking = false;
+                o2Breaking = false;
                 var stopCylIdx = currentCylIdx;
 
                 if (settings.Stops.DoO2Breaks)
@@ -358,8 +358,8 @@ public static class DecoPlanner
                         if (lastStopTime >= o2BreakDurationSec)
                         {
                             lastStopTime = o2BreakDurationSec;
-                            o2breaking = true;
-                            o2breakNext = true;
+                            o2Breaking = true;
+                            o2BreakNext = true;
                             breakFromCylIdx = currentCylIdx;
 
                             var segGas = 0;
@@ -390,13 +390,13 @@ public static class DecoPlanner
                                 cylinders[currentCylIdx].HePermille);
                         }
                     }
-                    else if (o2breakNext)
+                    else if (o2BreakNext)
                     {
-                        if (lastStopTime >= backgasBreakDurationSec)
+                        if (lastStopTime >= backGasBreakDurationSec)
                         {
-                            lastStopTime = backgasBreakDurationSec;
-                            o2breaking = true;
-                            o2breakNext = false;
+                            lastStopTime = backGasBreakDurationSec;
+                            o2Breaking = true;
+                            o2BreakNext = false;
 
                             var segGas = 0;
                             if (setpointMbar == 0)
@@ -436,7 +436,7 @@ public static class DecoPlanner
                     context.DepthToBar(depthMm), stopMix,
                     lastStopTime, diveMode, setpointMbar);
 
-                if (!o2breaking)
+                if (!o2Breaking)
                 {
                     var segGas = 0;
                     if (setpointMbar == 0)
@@ -464,7 +464,7 @@ public static class DecoPlanner
                 clock += lastStopTime;
                 ascentStartClock = clock;
 
-                if (!o2breaking)
+                if (!o2Breaking)
                 {
                     break;
                 }
@@ -492,25 +492,27 @@ public static class DecoPlanner
             }
         }
 
-        if (settings.Reserve.CalculateMinGas && bottomGasIdx >= 0)
+        if (!settings.Reserve.CalculateMinGas)
         {
-            var sacFactor = settings.Reserve.SacStressFactor > 0
-                ? settings.Reserve.SacStressFactor
-                : 2;
-            var problemTimeSec = settings.Stops.ProblemSolvingTimeMin * 60;
-            var teamSize = settings.Reserve.TeamSize > 0
-                ? settings.Reserve.TeamSize
-                : 1;
-
-            var pressureBar = context.DepthToBar(maxDepthMm);
-            var surfPressureBar = context.SurfacePressureMbar / 1000.0;
-            var ata = pressureBar / surfPressureBar;
-
-            var minGasMl = (int)(sacFactor * teamSize * bottomSac * problemTimeSec / 60.0 * ata
-                                 + sacFactor * (double)decoGasUsedPerCyl[bottomGasIdx]);
-
-            result.CylinderResults[bottomGasIdx].MinGasRequiredMl = minGasMl;
+            return result;
         }
+
+        var sacFactor = settings.Reserve.SacStressFactor > 0
+            ? settings.Reserve.SacStressFactor
+            : 2;
+        var problemTimeSec = settings.Stops.ProblemSolvingTimeMin * 60;
+        var teamSize = settings.Reserve.TeamSize > 0
+            ? settings.Reserve.TeamSize
+            : 1;
+
+        var pressureBar = context.DepthToBar(maxDepthMm);
+        var surfPressureBar = context.SurfacePressureMbar / 1000.0;
+        var ata = pressureBar / surfPressureBar;
+
+        var minGasMl = (int)(sacFactor * teamSize * bottomSac * problemTimeSec / 60.0 * ata
+                             + sacFactor * (double)decoGasUsedPerCyl[bottomGasIdx]);
+
+        result.CylinderResults[bottomGasIdx].MinGasRequiredMl = minGasMl;
 
         return result;
     }
