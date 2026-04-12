@@ -16,8 +16,8 @@ public class DivePlanBenchmarks
     private const int DescentRateMmSec = 5 * 1000 / 60;
     private const int DescentTimeSec = DepthM * 1000 / DescentRateMmSec / 60 * 60;
     private const int BottomPhaseSec = BottomTimeMin * 60 - DescentTimeSec;
-    private const uint SacBottomMlMin = 20;
-    private const uint SacDecoMlMin = 15;
+    private const uint SacBottomMlMin = 18000;
+    private const uint SacDecoMlMin = 15000;
 
     private Cylinder[] _cylinders = null!;
     private Waypoint[] _waypoints = null!;
@@ -63,9 +63,9 @@ public class DivePlanBenchmarks
             AscentDescent = new AscentDescentSettings
             {
                 DescentRateMmSec = DescentRateMmSec,
-                AscentRate75MmSec = 5 * 1000 / 60,
-                AscentRate50MmSec = 5 * 1000 / 60,
-                AscentRateStopsMmSec = 5 * 1000 / 60,
+                AscentRate75MmSec = DescentRateMmSec,
+                AscentRate50MmSec = DescentRateMmSec,
+                AscentRateStopsMmSec = DescentRateMmSec,
                 AscentRateLast6mMmSec = 1 * 1000 / 60
             },
             Stops = new StopSettings
