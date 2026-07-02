@@ -89,7 +89,7 @@ public sealed class DecoPlannerTests
 
         Assert.Equal(45000, plan.Segments[2].DepthStartMm);
         Assert.Equal(42000, plan.Segments[2].DepthEndMm);
-        Assert.Equal(38, plan.Segments[2].RuntimeEndSec - plan.Segments[2].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[2].RuntimeEndSec - plan.Segments[2].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[2].CylinderIndex);
 
         Assert.Equal(42000, plan.Segments[3].DepthStartMm);

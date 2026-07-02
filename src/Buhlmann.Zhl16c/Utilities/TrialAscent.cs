@@ -44,9 +44,11 @@ public static class TrialAscent
             var rateMmSec = AscentRate.GetAscentRate(depthMm, avgDepthMm, ascentSettings);
             var deltadMm = rateMmSec * BaseTimestep;
 
+            var stepSec = BaseTimestep;
             if (deltadMm > depthMm)
             {
                 deltadMm = depthMm;
+                stepSec = Math.Max(1, (int)Math.Round((double)deltadMm / rateMmSec));
             }
 
             var nextDepthMm = depthMm - deltadMm;
@@ -54,7 +56,7 @@ public static class TrialAscent
             ds.AddSegment(
                 context.DepthToBar((depthMm + nextDepthMm) / 2),
                 gasMix,
-                BaseTimestep,
+                stepSec,
                 diveMode,
                 setpointMbar);
 

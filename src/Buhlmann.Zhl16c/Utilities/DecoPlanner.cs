@@ -224,18 +224,21 @@ public static class DecoPlanner
                 var rateMmSec = AscentRate.GetAscentRate(depthMm, avgDepthMm, settings.AscentDescent);
                 var deltad = rateMmSec * BaseTimestep;
 
+                var stepSec = BaseTimestep;
+                
                 if (depthMm - deltad < nextStopMm)
                 {
                     deltad = depthMm - nextStopMm;
+                    stepSec = Math.Max(1, (int)Math.Round((double)deltad / rateMmSec));
                 }
 
                 var nextDepthMm = depthMm - deltad;
 
                 ds.AddSegment(
                     context.DepthToBar((depthMm + nextDepthMm) / 2), currentMix,
-                    BaseTimestep, diveMode, setpointMbar);
+                    stepSec, diveMode, setpointMbar);
 
-                clock += BaseTimestep;
+                clock += stepSec;
                 depthMm -= deltad;
             }
 
