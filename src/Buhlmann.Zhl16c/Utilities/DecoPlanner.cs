@@ -75,7 +75,7 @@ public static class DecoPlanner
             for (var sec = 0; sec < duration; sec++)
             {
                 var interpDepthMm = startDepthMm +
-                                    (endDepthMm - startDepthMm) * sec / duration;
+                                    (int)((endDepthMm - startDepthMm) * (sec + 0.5) / duration);
 
                 ds.AddSegment(
                     context.DepthToBar(interpDepthMm),
@@ -532,9 +532,21 @@ public static class DecoPlanner
         for (var i = 0; i < segmentCount; i++)
         {
             ref readonly var seg = ref result.Segments[i];
-            if (seg.CylinderIndex != bottomGasIdx) continue;
-            if (seg.SegmentType is not (SegmentType.DecoStop or SegmentType.Ascent)) continue;
-            if (firstSwitchClock >= 0 && seg.RuntimeStartSec >= firstSwitchClock) break;
+            if (seg.CylinderIndex != bottomGasIdx)
+            {
+                continue;
+            }
+
+            if (seg.SegmentType is not (SegmentType.DecoStop or SegmentType.Ascent))
+            {
+                continue;
+            }
+
+            if (firstSwitchClock >= 0 && seg.RuntimeStartSec >= firstSwitchClock)
+            {
+                break;
+            }
+
             decoGasToSwitch += seg.GasUsedMl;
         }
 
@@ -556,7 +568,11 @@ public static class DecoPlanner
 
         for (var i = 0; i < cylinders.Length; i++)
         {
-            if (i == bottomGasIdx) continue;
+            if (i == bottomGasIdx)
+            {
+                continue;
+            }
+
             result.CylinderResults[i].MinGasRequiredMbar =
                 (int)(cylinders[i].StartPressureMbar * 0.55);
         }

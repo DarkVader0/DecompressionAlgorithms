@@ -1,7 +1,4 @@
-﻿using Buhlmann.Zhl16c.Settings;
-using Buhlmann.Zhl16c.Utilities;
-
-namespace Buhlmann.Zhl16c.Tests.Unit;
+﻿namespace Buhlmann.Zhl16c.Tests.Unit;
 
 public sealed class AscentRateTests
 {

@@ -11,24 +11,24 @@ namespace Buhlmann.Zhl16c.Benchmarks;
 [MemoryDiagnoser(false)]
 public class DivePlanBenchmarks
 {
-    private Cylinder[] _cylinders = null!;
-    private Waypoint[] _waypoints = null!;
-    private PlannerSettings _settings;
     private DiveContext _context;
+    private Cylinder[] _cylinders = null!;
+    private PlannerSettings _settings;
+    private Waypoint[] _waypoints = null!;
 
     [GlobalSetup]
     public void Setup()
     {
         _cylinders =
         [
-            new()
+            new Cylinder
             {
                 O2Permille = 250,
                 HePermille = 0,
                 SizeMl = 24000,
                 StartPressureMbar = 200000
             },
-            new()
+            new Cylinder
             {
                 O2Permille = 500,
                 HePermille = 0,
@@ -49,7 +49,7 @@ public class DivePlanBenchmarks
                 BottomPo2Mbar = 1400,
                 DecoPo2Mbar = 1600,
                 BottomSacMl = 15000,
-                DecoSacMl = 10000,
+                DecoSacMl = 10000
             },
             Reserve = new ReserveGasSettings
             {
@@ -84,11 +84,11 @@ public class DivePlanBenchmarks
 
         _waypoints =
         [
-            new()
+            new Waypoint
             {
                 DepthMm = 48 * 1000, DurationSeconds = 48 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
             },
-            new()
+            new Waypoint
             {
                 DepthMm = 48 * 1000, DurationSeconds = 40 * 60 - 48 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
             }

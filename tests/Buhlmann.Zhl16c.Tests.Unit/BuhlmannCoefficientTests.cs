@@ -1,6 +1,4 @@
-﻿using Buhlmann.Zhl16c.Coefficients;
-
-namespace Buhlmann.Zhl16c.Tests.Unit;
+﻿namespace Buhlmann.Zhl16c.Tests.Unit;
 
 public sealed class BuhlmannCoefficientTests
 {
