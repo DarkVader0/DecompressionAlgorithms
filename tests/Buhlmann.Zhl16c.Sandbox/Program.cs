@@ -86,7 +86,9 @@ void PlanNoDeco()
             DepthMm = 45 * 1000, DurationSeconds = 40 * 60 - 45 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
-    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+
+    var decoState = DecoState.CreateAtSurface();
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
@@ -169,7 +171,8 @@ void PlanDeco45()
             DepthMm = 45 * 1000, DurationSeconds = 40 * 60 - 45 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
-    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    var decoState = DecoState.CreateAtSurface();
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
@@ -252,7 +255,8 @@ void PlanDeco48()
             DepthMm = 48 * 1000, DurationSeconds = 40 * 60 - 48 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
-    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    var decoState = DecoState.CreateAtSurface();
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
@@ -335,7 +339,8 @@ void PlanDeco40()
             DepthMm = 40 * 1000, DurationSeconds = 45 * 60 - 40 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
-    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    var decoState = DecoState.CreateAtSurface();
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
@@ -426,7 +431,8 @@ void PlanDeco79()
             DepthMm = 79 * 1000, DurationSeconds = 30 * 60 - 79 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
         }
     ];
-    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+    var decoState = DecoState.CreateAtSurface();
+    var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 

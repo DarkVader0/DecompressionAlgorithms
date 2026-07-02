@@ -17,7 +17,8 @@ public static class DecoPlanner
         ReadOnlySpan<Cylinder> cylinders,
         ReadOnlySpan<Waypoint> waypoints,
         PlannerSettings settings,
-        DiveContext context)
+        DiveContext context,
+        DecoState decoState)
     {
         var result = new PlanResult
         {
@@ -40,7 +41,7 @@ public static class DecoPlanner
 
         var segmentCount = 0;
         var surfacePressureBar = context.SurfacePressureMbar / 1000.0;
-        var ds = DecoState.CreateAtSurface(surfacePressureBar);
+        // var ds = DecoState.CreateAtSurface(surfacePressureBar);
         var gfLow = settings.Deco.GFLow / 100.0;
         var gfHigh = settings.Deco.GFHigh / 100.0;
 
@@ -77,7 +78,7 @@ public static class DecoPlanner
                 var interpDepthMm = startDepthMm +
                                     (int)((endDepthMm - startDepthMm) * (sec + 0.5) / duration);
 
-                ds.AddSegment(
+                decoState.AddSegment(
                     context.DepthToBar(interpDepthMm),
                     mix, 1, diveMode, setpointMbar);
             }
@@ -149,7 +150,7 @@ public static class DecoPlanner
                 result.Error = PlanError.NoBailoutGas;
             }
 
-            ds.AddSegment(
+            decoState.AddSegment(
                 context.DepthToBar(depthMm), currentMix,
                 bailoutSec, diveMode, 0);
 
@@ -197,7 +198,7 @@ public static class DecoPlanner
         var stopIdx = mergedCount - 1;
         var minStopIdx = settings.Stops.LastStopAt6m ? 2 : 1;
 
-        ds.CeilingMm(gfLow, gfHigh, context);
+        decoState.CeilingMm(gfLow, gfHigh, context);
 
         var lastStopTime = DefaultTimestep;
         var ascentStartClock = clock;
@@ -225,7 +226,7 @@ public static class DecoPlanner
                 var deltad = rateMmSec * BaseTimestep;
 
                 var stepSec = BaseTimestep;
-                
+
                 if (depthMm - deltad < nextStopMm)
                 {
                     deltad = depthMm - nextStopMm;
@@ -234,7 +235,7 @@ public static class DecoPlanner
 
                 var nextDepthMm = depthMm - deltad;
 
-                ds.AddSegment(
+                decoState.AddSegment(
                     context.DepthToBar((depthMm + nextDepthMm) / 2), currentMix,
                     stepSec, diveMode, setpointMbar);
 
@@ -322,7 +323,7 @@ public static class DecoPlanner
             var nextTarget = stopIdx >= minStopIdx ? stopLevels[stopIdx] : 0;
 
             if (TrialAscent.IsClearToAscend(
-                    ref ds, depthMm, nextTarget, avgDepthMm,
+                    ref decoState, depthMm, nextTarget, avgDepthMm,
                     currentMix, diveMode, setpointMbar, 0,
                     gfLow, gfHigh, settings.AscentDescent, context))
             {
@@ -332,7 +333,7 @@ public static class DecoPlanner
             while (true)
             {
                 if (TrialAscent.IsClearToAscend(
-                        ref ds, depthMm, nextTarget, avgDepthMm,
+                        ref decoState, depthMm, nextTarget, avgDepthMm,
                         currentMix, diveMode, setpointMbar, 0,
                         gfLow, gfHigh, settings.AscentDescent, context))
                 {
@@ -340,7 +341,7 @@ public static class DecoPlanner
                 }
 
                 var newClock = WaitUntil.FindClearTime(
-                    ref ds, clock, clock, lastStopTime * 2 + 1, DefaultTimestep,
+                    ref decoState, clock, clock, lastStopTime * 2 + 1, DefaultTimestep,
                     depthMm, nextTarget, avgDepthMm,
                     currentMix, diveMode, setpointMbar,
                     gfLow, gfHigh, settings.AscentDescent, context);
@@ -437,7 +438,7 @@ public static class DecoPlanner
                     cylinders[stopCylIdx].O2Permille,
                     cylinders[stopCylIdx].HePermille);
 
-                ds.AddSegment(
+                decoState.AddSegment(
                     context.DepthToBar(depthMm), stopMix,
                     lastStopTime, diveMode, setpointMbar);
 

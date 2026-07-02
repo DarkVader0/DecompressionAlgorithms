@@ -70,9 +70,10 @@ public sealed class DecoPlannerTests
                 DepthMm = 45 * 1000, DurationSeconds = 40 * 60 - 45 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
             }
         ];
+        var decoStateAtSurface = DecoState.CreateAtSurface();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoStateAtSurface);
 
         // Assert
         Assert.Equal(20, plan.SegmentCount);
@@ -94,91 +95,92 @@ public sealed class DecoPlannerTests
 
         Assert.Equal(42000, plan.Segments[3].DepthStartMm);
         Assert.Equal(39000, plan.Segments[3].DepthEndMm);
-        Assert.Equal(38, plan.Segments[3].RuntimeEndSec - plan.Segments[3].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[3].RuntimeEndSec - plan.Segments[3].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[3].CylinderIndex);
 
         Assert.Equal(39000, plan.Segments[4].DepthStartMm);
         Assert.Equal(36000, plan.Segments[4].DepthEndMm);
-        Assert.Equal(38, plan.Segments[4].RuntimeEndSec - plan.Segments[4].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[4].RuntimeEndSec - plan.Segments[4].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[4].CylinderIndex);
 
         Assert.Equal(36000, plan.Segments[5].DepthStartMm);
         Assert.Equal(33000, plan.Segments[5].DepthEndMm);
-        Assert.Equal(38, plan.Segments[5].RuntimeEndSec - plan.Segments[5].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[5].RuntimeEndSec - plan.Segments[5].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[5].CylinderIndex);
 
         Assert.Equal(33000, plan.Segments[6].DepthStartMm);
         Assert.Equal(30000, plan.Segments[6].DepthEndMm);
-        Assert.Equal(38, plan.Segments[6].RuntimeEndSec - plan.Segments[6].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[6].RuntimeEndSec - plan.Segments[6].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[6].CylinderIndex);
 
         Assert.Equal(30000, plan.Segments[7].DepthStartMm);
         Assert.Equal(27000, plan.Segments[7].DepthEndMm);
-        Assert.Equal(38, plan.Segments[7].RuntimeEndSec - plan.Segments[7].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[7].RuntimeEndSec - plan.Segments[7].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[7].CylinderIndex);
 
         Assert.Equal(27000, plan.Segments[8].DepthStartMm);
         Assert.Equal(24000, plan.Segments[8].DepthEndMm);
-        Assert.Equal(38, plan.Segments[8].RuntimeEndSec - plan.Segments[8].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[8].RuntimeEndSec - plan.Segments[8].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[8].CylinderIndex);
 
         Assert.Equal(24000, plan.Segments[9].DepthStartMm);
         Assert.Equal(21000, plan.Segments[9].DepthEndMm);
-        Assert.Equal(38, plan.Segments[9].RuntimeEndSec - plan.Segments[9].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[9].RuntimeEndSec - plan.Segments[9].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[9].CylinderIndex);
 
         Assert.Equal(21000, plan.Segments[10].DepthStartMm);
         Assert.Equal(18000, plan.Segments[10].DepthEndMm);
-        Assert.Equal(38, plan.Segments[10].RuntimeEndSec - plan.Segments[10].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[10].RuntimeEndSec - plan.Segments[10].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[10].CylinderIndex);
 
         Assert.Equal(18000, plan.Segments[11].DepthStartMm);
         Assert.Equal(15000, plan.Segments[11].DepthEndMm);
-        Assert.Equal(38, plan.Segments[11].RuntimeEndSec - plan.Segments[11].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[11].RuntimeEndSec - plan.Segments[11].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[11].CylinderIndex);
 
         Assert.Equal(15000, plan.Segments[12].DepthStartMm);
         Assert.Equal(15000, plan.Segments[12].DepthEndMm);
-        Assert.Equal(280, plan.Segments[12].RuntimeEndSec - plan.Segments[12].RuntimeStartSec);
+        Assert.Equal(290, plan.Segments[12].RuntimeEndSec - plan.Segments[12].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[12].CylinderIndex);
 
         Assert.Equal(15000, plan.Segments[13].DepthStartMm);
         Assert.Equal(12000, plan.Segments[13].DepthEndMm);
-        Assert.Equal(38, plan.Segments[13].RuntimeEndSec - plan.Segments[13].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[13].RuntimeEndSec - plan.Segments[13].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[13].CylinderIndex);
 
         Assert.Equal(12000, plan.Segments[14].DepthStartMm);
         Assert.Equal(12000, plan.Segments[14].DepthEndMm);
-        Assert.Equal(382, plan.Segments[14].RuntimeEndSec - plan.Segments[14].RuntimeStartSec);
+        Assert.Equal(383, plan.Segments[14].RuntimeEndSec - plan.Segments[14].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[14].CylinderIndex);
 
         Assert.Equal(12000, plan.Segments[15].DepthStartMm);
         Assert.Equal(9000, plan.Segments[15].DepthEndMm);
-        Assert.Equal(38, plan.Segments[15].RuntimeEndSec - plan.Segments[15].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[15].RuntimeEndSec - plan.Segments[15].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[15].CylinderIndex);
 
         Assert.Equal(9000, plan.Segments[16].DepthStartMm);
         Assert.Equal(9000, plan.Segments[16].DepthEndMm);
-        Assert.Equal(742, plan.Segments[16].RuntimeEndSec - plan.Segments[16].RuntimeStartSec);
+        Assert.Equal(743, plan.Segments[16].RuntimeEndSec - plan.Segments[16].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[16].CylinderIndex);
 
         Assert.Equal(9000, plan.Segments[17].DepthStartMm);
         Assert.Equal(6000, plan.Segments[17].DepthEndMm);
-        Assert.Equal(38, plan.Segments[17].RuntimeEndSec - plan.Segments[17].RuntimeStartSec);
+        Assert.Equal(37, plan.Segments[17].RuntimeEndSec - plan.Segments[17].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[17].CylinderIndex);
 
         Assert.Equal(6000, plan.Segments[18].DepthStartMm);
         Assert.Equal(6000, plan.Segments[18].DepthEndMm);
-        Assert.Equal(5362, plan.Segments[18].RuntimeEndSec - plan.Segments[18].RuntimeStartSec);
+        Assert.Equal(5363, plan.Segments[18].RuntimeEndSec - plan.Segments[18].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[18].CylinderIndex);
 
         Assert.Equal(6000, plan.Segments[19].DepthStartMm);
         Assert.Equal(0, plan.Segments[19].DepthEndMm);
-        Assert.Equal(376, plan.Segments[19].RuntimeEndSec - plan.Segments[19].RuntimeStartSec);
+        Assert.Equal(375, plan.Segments[19].RuntimeEndSec - plan.Segments[19].RuntimeStartSec);
         Assert.Equal(0, plan.Segments[19].CylinderIndex);
     }
 
-    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context)
+    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context, DecoState
+        decoState)
         CreateTestMetricPlan()
     {
         var settings = new PlannerSettings
@@ -228,17 +230,19 @@ public sealed class DecoPlannerTests
         ];
 
         var context = new DiveContext(1013, WaterType.Salt);
-        return (settings, cylinders, waypoints, context);
+        var decoState = DecoState.CreateAtSurface();
+
+        return (settings, cylinders, waypoints, context, decoState);
     }
 
     [Fact]
     public void TestMetric_ShouldHaveAtLeastTwoGasSwitches()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestMetricPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
@@ -249,10 +253,10 @@ public sealed class DecoPlannerTests
     public void TestMetric_FirstGasChange_ShouldBeEan36At33m()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestMetricPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
@@ -267,10 +271,10 @@ public sealed class DecoPlannerTests
     public void TestMetric_SecondGasChange_ShouldBeOxygenAt6m()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestMetricPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
@@ -285,17 +289,18 @@ public sealed class DecoPlannerTests
     public void TestMetric_Runtime_ShouldBe109Minutes()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestMetricPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestMetricPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
         AssertDecoTimeWithinTolerance(plan.TimeTotalSec, 109 * 60);
     }
 
-    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context)
+    private static (PlannerSettings Settings, Cylinder[] Cylinders, Waypoint[] Waypoints, DiveContext Context, DecoState
+        decoState)
         CreateTestCcrBailoutPlan()
     {
         var settings = new PlannerSettings
@@ -353,17 +358,19 @@ public sealed class DecoPlannerTests
         ];
 
         var context = new DiveContext(1013, WaterType.Salt);
-        return (settings, cylinders, waypoints, context);
+        var decoState = DecoState.CreateAtSurface();
+
+        return (settings, cylinders, waypoints, context, decoState);
     }
 
     [Fact]
     public void TestCcrBailout_Runtime_ShouldBe51Minutes()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestCcrBailoutPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
@@ -374,10 +381,10 @@ public sealed class DecoPlannerTests
     public void TestCcrBailout_DeepBailoutGas_ShouldBeTx1933()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestCcrBailoutPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);
@@ -390,10 +397,10 @@ public sealed class DecoPlannerTests
     public void TestCcrBailout_ShallowBailoutGas_ShouldBeEan53()
     {
         // Arrange
-        var (settings, cylinders, waypoints, context) = CreateTestCcrBailoutPlan();
+        var (settings, cylinders, waypoints, context, decoState) = CreateTestCcrBailoutPlan();
 
         // Act
-        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
+        var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context, decoState);
 
         // Assert
         Assert.Equal(PlanError.Ok, plan.Error);

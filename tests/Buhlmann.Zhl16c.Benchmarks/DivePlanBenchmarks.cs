@@ -13,6 +13,7 @@ public class DivePlanBenchmarks
 {
     private DiveContext _context;
     private Cylinder[] _cylinders = null!;
+    private DecoState _decoState;
     private PlannerSettings _settings;
     private Waypoint[] _waypoints = null!;
 
@@ -93,11 +94,12 @@ public class DivePlanBenchmarks
                 DepthMm = 48 * 1000, DurationSeconds = 40 * 60 - 48 * 1000 / (5 * 1000) * 60, CylinderIndex = 0
             }
         ];
+        _decoState = DecoState.CreateAtSurface();
     }
 
     [Benchmark(Description = "Full Plan (48m/48min NX25,NX50)")]
     public PlanResult BenchmarkFullPlan()
     {
-        return DecoPlanner.Plan(_cylinders, _waypoints, _settings, _context);
+        return DecoPlanner.Plan(_cylinders, _waypoints, _settings, _context, _decoState);
     }
 }
