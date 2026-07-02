@@ -6,7 +6,7 @@ using Buhlmann.Zhl16c.Settings;
 
 namespace Buhlmann.Zhl16c.Utilities;
 
-public static class Validation
+internal static class Validation
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static PlanError ValidateGasMix(GasMix mix)
@@ -21,7 +21,7 @@ public static class Validation
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static PlanError ValidateCylinder(Cylinder cylinder)
+    internal static PlanError ValidateCylinder(Cylinder cylinder)
     {
         var error = ValidateGasMix(new GasMix(cylinder.O2Permille, cylinder.HePermille));
 
@@ -40,7 +40,7 @@ public static class Validation
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static PlanError ValidateSettings(PlannerSettings settings)
+    internal static PlanError ValidateSettings(PlannerSettings settings)
     {
         var error = ValidateGradientFactors(settings.Deco.GFLow, settings.Deco.GFHigh);
 

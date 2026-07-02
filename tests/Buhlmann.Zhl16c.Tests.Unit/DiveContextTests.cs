@@ -223,7 +223,7 @@ public sealed class DiveContextTests
         var endMm = ctx.EndMm(air, depthMm, false);
 
         // Assert
-        Assert.InRange(endMm, depthMm, (long)depthMm + 450);
+        Assert.InRange(endMm, depthMm - 100, (long)depthMm + 100);
     }
 
     [Fact]

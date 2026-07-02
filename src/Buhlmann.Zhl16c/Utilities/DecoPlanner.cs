@@ -229,8 +229,10 @@ public static class DecoPlanner
                     deltad = depthMm - nextStopMm;
                 }
 
+                var nextDepthMm = depthMm - deltad;
+
                 ds.AddSegment(
-                    context.DepthToBar(depthMm), currentMix,
+                    context.DepthToBar((depthMm + nextDepthMm) / 2), currentMix,
                     BaseTimestep, diveMode, setpointMbar);
 
                 clock += BaseTimestep;

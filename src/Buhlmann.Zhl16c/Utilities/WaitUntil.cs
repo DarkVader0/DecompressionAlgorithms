@@ -4,12 +4,12 @@ using Buhlmann.Zhl16c.Settings;
 
 namespace Buhlmann.Zhl16c.Utilities;
 
-public static class WaitUntil
+internal static class WaitUntil
 {
     private const int MaxWaitSeconds = 48 * 3600;
     private const int TimeoutReturnSeconds = 50 * 3600;
 
-    public static int FindClearTime(
+    internal static int FindClearTime(
         ref DecoState ds,
         int clock,
         int min,

@@ -49,8 +49,10 @@ public static class TrialAscent
                 deltadMm = depthMm;
             }
 
+            var nextDepthMm = depthMm - deltadMm;
+
             ds.AddSegment(
-                context.DepthToBar(depthMm),
+                context.DepthToBar((depthMm + nextDepthMm) / 2),
                 gasMix,
                 BaseTimestep,
                 diveMode,
