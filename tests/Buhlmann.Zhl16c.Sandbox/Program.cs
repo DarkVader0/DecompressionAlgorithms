@@ -87,7 +87,7 @@ void PlanNoDeco()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
     Console.WriteLine(plan.ToString());
@@ -170,9 +170,9 @@ void PlanDeco45()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
 
@@ -255,7 +255,7 @@ void PlanDeco48()
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
 
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
-    
+
     Console.WriteLine(plan.ToString());
 }
 
@@ -336,7 +336,7 @@ void PlanDeco40()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
     Console.WriteLine(plan.ToString());
@@ -427,7 +427,7 @@ void PlanDeco79()
         }
     ];
     var plan = DecoPlanner.Plan(cylinders, waypoints, settings, context);
-    
+
     OxygenToxicity.ApplyToPlan(ref plan, cylinders, context);
 
     Console.WriteLine(plan.ToString());

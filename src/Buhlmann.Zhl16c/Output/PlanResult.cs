@@ -1,4 +1,4 @@
-﻿﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 using Buhlmann.Zhl16c.Enums;
 
@@ -73,12 +73,12 @@ public struct PlanResult
         for (i = 0; i < CylinderCount; i++)
         {
             ref var cr = ref CylinderResults[i];
-            sb.AppendLine($"({cr.Mix}): Used {cr.GasUsedMbar/1000}bar ({cr.GasUsedMl/1000}L), End {cr.EndPressureMbar/1000}bar, Turn pressure {cr.MinGasRequiredMbar/1000}bar");
+            sb.AppendLine($"({cr.Mix}): Used {cr.GasUsedMbar / 1000}bar ({cr.GasUsedMl / 1000}L), End {cr.EndPressureMbar / 1000}bar, Turn pressure {cr.MinGasRequiredMbar / 1000}bar");
 
             if (cr.EndPressureMbar < cr.MinGasRequiredMbar)
             {
                 var shortMbar = cr.MinGasRequiredMbar - cr.EndPressureMbar;
-                sb.AppendLine($"  ⚠ Out of gas: {shortMbar/1000}bar short");
+                sb.AppendLine($"  ⚠ Out of gas: {shortMbar / 1000}bar short");
             }
         }
 

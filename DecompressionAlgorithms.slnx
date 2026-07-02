@@ -1,4 +1,8 @@
 <Solution>
+    <Folder Name="/Solution Items/">
+        <File Path=".editorconfig" />
+        <File Path=".gitignore" />
+    </Folder>
     <Folder Name="/src/">
         <Project Path="src/Buhlmann.Zhl16c/Buhlmann.Zhl16c.csproj" />
     </Folder>
