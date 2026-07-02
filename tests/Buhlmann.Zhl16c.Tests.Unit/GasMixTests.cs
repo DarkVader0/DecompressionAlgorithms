@@ -17,23 +17,20 @@ public sealed class GasMixTests
         Assert.Equal((ushort)470, n2);
     }
 
-    [Fact]
-    public void IsAir_ShouldBeTrue_ForO2Between209And211_AndHeZero()
+    [Theory]
+    [InlineData(209)]
+    [InlineData(210)]
+    [InlineData(211)]
+    public void IsAir_ShouldBeTrue_ForO2Between209And211_AndHeZero(ushort o2Permille)
     {
         // Arrange
-        var air209 = new GasMix(209, 0);
-        var air210 = new GasMix(210, 0);
-        var air211 = new GasMix(211, 0);
+        var air = new GasMix(o2Permille, 0);
 
         // Act
-        var r209 = air209.IsAir;
-        var r210 = air210.IsAir;
-        var r211 = air211.IsAir;
+        var isAir = air.IsAir;
 
         // Assert
-        Assert.True(r209);
-        Assert.True(r210);
-        Assert.True(r211);
+        Assert.True(isAir);
     }
 
     [Fact]
